@@ -1,0 +1,2 @@
+# EffecientMultiPartyPSI
+A Jupyter Notebook for vewing a simulation of Effecient Multi Party PSI as described by En Zhang, Feng-Hao Liu, Qiqi Lai∗, Ganggang Jin, and Yu Li. 2019. Efficient Multi-Party Private Set Intersection Against Malicious Adversaries. In 2019 Cloud Computing Security Workshop (CCSW ’19), November 11, 2019, London, UK. ACM, New York, NY, USA, 12 pages. https://doi.org/10.1145/3338466. 3358927
