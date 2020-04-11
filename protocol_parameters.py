@@ -1,6 +1,7 @@
 import math
 
-class Security_Params(object):
+
+class ProtocolParameters(object):
     def __init__(self, Nmaxones, PlayerInputSize, k, p, a, SecParam, Nbf):
         self.Nmaxones = Nmaxones
         self.PlayerInputSize = PlayerInputSize
@@ -12,17 +13,17 @@ class Security_Params(object):
 
         self.p1bound = self.Calc_p1bound()
         self.gamma = self.Calc_Gamma()
-        if( not self.CheckGamma(self.p1bound) ):
+        if(not self.CheckGamma(self.p1bound)):
             print("Gamma out of bounds, please reconfigure the input parameters")
             exit()
         self.Not = self.Calc_Not()
         self.gammaStar = self.Calc_GammaStar()
-        if( not self.CheckGamma(self.Not) ):
+        if(not self.CheckGamma(self.Not)):
             print("GammaStar out of bounds, please reconfigure the input parameters")
             exit()
 
     def CheckGamma(self, bound):
-        return self.gamma <= ( self.SecParam + math.sqrt( pow(self.SecParam, 2) + ( 8 * self.SecParam * bound ) ) ) / (2 * self.p * bound)
+        return self.gamma <= (self.SecParam + math.sqrt( pow(self.SecParam, 2) + ( 8 * self.SecParam * bound ) ) ) / (2 * self.p * bound)
 
     def Calc_p1bound(self):
         return self.PlayerInputSize * self.k + self.Nmaxones

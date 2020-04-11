@@ -1,4 +1,4 @@
-import hashlib, math, players
+import hashlib, math, player
 
 class CommitmentScheme(object):
     def __init__(self, parameter = "iamalittleteapot"):
