@@ -1,8 +1,9 @@
 class message(object):
 
-    def __init__(self, bits):
+    def __init__(self, bits, transferID):
         self.bits = bits
         self.opens = []
+        self.transferID = transferID
 
     def isOne(self):
         return 1 if self.bits[1] != 0 else 0
