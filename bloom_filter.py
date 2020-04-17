@@ -9,7 +9,7 @@ class new(object):
         self.hashes = hashes
         self.indices = [0] * m
 
-    def genIndicesForValue(self, value):
+    def genIndicesForValue(self, value) -> bool:
         indices = []
         for i in range(0, self.hashes.count):
             index = self.hashes.getHash(i, value)
@@ -30,9 +30,11 @@ class new(object):
                 present = False
                 break
         if present:
-            print("Value \"{}\" found".format(value))
+            return True
+            # print("Value \"{}\" found".format(value))
         else:
-            print("Value \"{}\" not found".format(value))
+            return False
+            # print("Value \"{}\" not found".format(value))
     
     def print(self, prefix=""):
         print("{} {}".format(prefix, self.indices))

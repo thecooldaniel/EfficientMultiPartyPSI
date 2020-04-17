@@ -3,14 +3,14 @@ import players
 import hashes
 import bloom_filter as bf
 
-class init(object):
+class protocol(object):
     def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, Nbf):
         self.players = []
         self.params = pm.Paramaters(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, Nbf)
         self.initPlayers()
         self.hashes = hashes.new(self.params.k)
         self.initBloomFilters()
-
+    
     def initPlayers(self):
         print("Initializing Players...")
         p0 = players.PlayerHub(0)
@@ -33,6 +33,13 @@ class init(object):
 
     def testBloomFilters(self):
         m = "hello"
+        print("\nTesting Bloom Filters...")
         for player in self.players:
             player.bloom_filter.add(m)
-            player.bloom_filter.print("Player {}'s bloom filter: ".format(player.id))
+            player.bloom_filter.print("Player {}: ".format(player.id))
+
+
+def init(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, Nbf):
+        return protocol(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, Nbf)
+        
+    
