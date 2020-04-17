@@ -1,11 +1,11 @@
 import math
 
-
-class ProtocolParameters(object):
-    def __init__(self, Nmaxones, PlayerInputSize, k, p, a, SecParam, Nbf):
+class Paramaters(object):
+    def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, Nbf):
+        self.NumPlayers = NumPlayers
         self.Nmaxones = Nmaxones
         self.PlayerInputSize = PlayerInputSize
-        self.k = k
+        self.k = math.ceil( (Nbf / PlayerInputSize) * math.log(2) )
         self.p = p
         self.a = a
         self.SecParam = SecParam
