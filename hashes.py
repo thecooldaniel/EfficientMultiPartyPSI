@@ -1,6 +1,6 @@
 import hashlib
 
-class new(object):
+class hashes(object):
     def __init__(self, count):
         # self.length = length
         self.count = count
@@ -13,3 +13,6 @@ class new(object):
         h.update(value.encode())
         return h.digest()
 
+
+def new(count):
+    return hashes(count)

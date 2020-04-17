@@ -2,7 +2,7 @@ import math
 import hashes as h
 import helpers
 
-class new(object):
+class bloom_filter(object):
     def __init__(self, m, n, hashes):
         self.m = m
         self.n = n
@@ -36,6 +36,13 @@ class new(object):
             return False
             # print("Value \"{}\" not found".format(value))
     
+    def clear(self):
+        for i in range(0, len(self.indices)):
+            self.indices[i] = 0
+    
     def print(self, prefix=""):
         print("{} {}".format(prefix, self.indices))
 
+
+def new(m, n, hashes):
+    return bloom_filter(m, n, hashes)

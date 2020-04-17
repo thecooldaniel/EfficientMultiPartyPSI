@@ -33,13 +33,30 @@ class protocol(object):
 
     def testBloomFilters(self):
         m = "hello"
-        print("\nTesting Bloom Filters...")
+        print("\nPopulating Bloom Filters with value \"{}\"".format(m))
         for player in self.players:
             player.bloom_filter.add(m)
             player.bloom_filter.print("Player {}: ".format(player.id))
+        print("\nEnsuring uniformity...")
+        valid = True
+        for i in range(0, len(self.players[0].bloom_filter.indices)):
+            p0 = self.players[0].bloom_filter.indices[i]
+            for j in range(1, len(self.players)):
+                if self.players[j].bloom_filter.indices[i] != p0:
+                    valid = False
+                    break
+        if valid:
+            print("Result: All Bloom Filters equal")
+        if not valid:
+            print("Result: Bloom filters inconsistent!")
+
+        print("Resetting Bloom Filters...")
+        for player in self.players:
+            player.bloom_filter.clear()
 
 
-def init(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, Nbf):
+
+def new(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, Nbf):
         return protocol(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, Nbf)
         
     

@@ -17,7 +17,6 @@ class PlayerSpoke(Player):
     def storeMessage(self, message):
         self.messages.append(message)
 
-
 class PlayerHub(Player):
     def storeTransfer(self, messages):
         self.messages.append(messages)
