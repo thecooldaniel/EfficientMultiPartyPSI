@@ -1,25 +1,23 @@
-import math
-import protocol as P
-import bloom_filter as BF
-import pandas as PD
+import protocol
+import helpers
+import hashes as h
+import bloom_filter as bf
 
 NumPlayers = 3 
 PlayerInputSize = 5
 Nbf = 10
-k = BF.GetNumHashFuncs(Nbf, PlayerInputSize)
 SecParam = 40
 Nmaxones = 10
 p = 0.25
 a = 0.3
 
-# Initialize the protocol with the parameters above
-Protocol = P.Protocol(Nmaxones, PlayerInputSize, k, p, a, SecParam, Nbf)
-Protocol.Report_ProtocolParams()
+Protocol = protocol.init(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, Nbf)
 
-# Add the players to the protocol
-Protocol.AddPlayers(NumPlayers)
 
-Protocol.Perform_RandomOT(Protocol.Params.a, Protocol.Params.Not)
-Protocol.Report_PlayerMessages()
+bfilter = bf.new(Nbf, PlayerInputSize, Protocol.hashes)
 
-Protocol.Perform_CutAndChoose()
+bfilter.add("hello")
+bfilter.check("hello")
+bfilter.check("obiwan")
+
+a=1

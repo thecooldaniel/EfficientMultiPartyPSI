@@ -1,6 +1,9 @@
-import os, binascii
+import binascii
 
-def uRandomInt(bytes):
-    r = os.urandom(bytes)
-    rhex = binascii.hexlify(r)
-    return int(rhex, 16)
+def hexfromdigest(digest):
+    return binascii.hexlify(digest)
+
+def decfromdigest(digest, domain=-1):
+    hexs = hexfromdigest(digest)
+    dec = int(hexs, 16)
+    return (dec % domain) if (domain > 0) else dec
