@@ -12,12 +12,4 @@ p = 0.25
 a = 0.3
 
 Protocol = protocol.init(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, Nbf)
-
-
-bfilter = bf.new(Nbf, PlayerInputSize, Protocol.hashes)
-
-bfilter.add("hello")
-bfilter.check("hello")
-bfilter.check("obiwan")
-
-a=1
+Protocol.testBloomFilters()
