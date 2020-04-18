@@ -2,24 +2,25 @@ import parameters as pm
 import players
 import hashes
 import bloom_filter as bf
+import random_oblivious_transfer as rot
 
 class protocol(object):
-    def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, Nbf):
+    def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf):
         self.players = []
-        self.params = pm.Paramaters(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, Nbf)
+        self.params = pm.Paramaters(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf)
         self.initPlayers()
         self.hashes = hashes.new(self.params.k)
         self.initBloomFilters()
     
     def initPlayers(self):
         print("Initializing Players...")
-        p0 = players.PlayerHub(0)
-        p1 = players.PlayerHub(1)
+        p0 = players.PlayerHub(0, self.params)
+        p1 = players.PlayerHub(1, self.params)
         self.players.append(p0)
         self.players.append(p1)
 
         for i in range(2, self.params.NumPlayers):
-            p = players.PlayerSpoke(i)
+            p = players.PlayerSpoke(i, self.params)
             self.players.append(p)
     
     def initBloomFilters(self):
@@ -53,10 +54,19 @@ class protocol(object):
         print("Resetting Bloom Filters...")
         for player in self.players:
             player.bloom_filter.clear()
+    
+    def performRandomOT(self):
+        sender = self.players[0]
+        receivers = []
+        for i in range(1, len(self.players)):
+            receivers.append(self.players[i])
+
+        randomOT = rot.random_ot(sender, receivers)
+        randomOT.performTransfers()
 
 
 
-def new(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, Nbf):
-        return protocol(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, Nbf)
+def new(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf):
+        return protocol(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf)
         
     

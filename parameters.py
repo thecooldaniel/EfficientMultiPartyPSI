@@ -1,7 +1,7 @@
 import math
 
 class Paramaters(object):
-    def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, Nbf):
+    def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf):
         self.NumPlayers = NumPlayers
         self.Nmaxones = Nmaxones
         self.PlayerInputSize = PlayerInputSize
@@ -10,6 +10,7 @@ class Paramaters(object):
         self.a = a
         self.SecParam = SecParam
         self.Nbf = Nbf
+        self.bitLength = bitLength // 8 #uRandom takes bytes, not bits
 
         self.p1bound = self.Calc_p1bound()
         self.gamma = self.Calc_Gamma()
