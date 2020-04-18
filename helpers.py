@@ -20,30 +20,3 @@ def uRandomInt(bytes):
     rhex = binascii.hexlify(r)
     return int(rhex, 16)
 
-def buildTotalTransfers(players):
-    transfers = []
-    for i in range(0, len(players[0].messages)):
-        t = []
-        for player in players:
-            if player.id == 0:
-                for j in range(0, len(player.messages[i])):
-                    r = player.messages[i][j].get()
-                    t.append(r)
-            else:
-                r = player.messages[i].get()
-                t.append(r)
-        transfers.append(t)
-    return transfers
-
-def printTransfers(transfers, numPlayers):
-    columns = []
-    indices = []
-    numCols = (3 * numPlayers) - 3
-    p0Cols = (numPlayers - 1) * 2
-    for i in range(0, numCols):
-        if i <= p0Cols - 1:
-            columns.append("P0")
-        else:
-            columns.append("P{}".format((i - p0Cols) + 1))
-    table = pd.DataFrame(transfers, columns = columns)
-    print(table)

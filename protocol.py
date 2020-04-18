@@ -30,7 +30,7 @@ class protocol(object):
         hashes = self.hashes
         for player in self.players:
             player.createBloomFilter(m, n, hashes)
-            player.bloom_filter.print("Player {}: ".format(player.id))
+            # player.bloom_filter.print("Player {}: ".format(player.id))
 
     def testBloomFilters(self):
         m = "hello"
@@ -63,7 +63,14 @@ class protocol(object):
 
         randomOT = rot.random_ot(sender, receivers)
         randomOT.performTransfers()
-
+        randomOT.getAllTransfersFromPlayers()
+        randomOT.printAllTransfers()
+    
+    def getPlayerOnes(self):
+        for player in self.players:
+            ones = player.getTotalOnes()
+            ideal = self.params.Not * self.params.a
+            print("P{} has {} ones. a * Not: {}".format(player.id, ones, ideal))
 
 
 def new(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf):

@@ -1,6 +1,7 @@
 import message as ms
 import players
 import helpers
+import pandas as pd
 
 # Simulates the random OT stage
 class random_ot(object):
@@ -8,6 +9,7 @@ class random_ot(object):
         self.sender = sender
         self.receivers = receivers
         self.params = sender.params
+        self.transfers = None
         # Todo
 
     def genRandomString(self):
@@ -27,4 +29,35 @@ class random_ot(object):
                 t.append(m[0])
                 t.append(m[1])
             self.sender.storeTransfer(t)
+    
+    def getAllTransfersFromPlayers(self):
+        transfers = []
+        for i in range(0, len(self.sender.messages)):
+            t = self.getSingleTransferFromPlayers(i)
+            transfers.append(t)
+        self.transfers = transfers
+
+    def getSingleTransferFromPlayers(self, index):
+        t = []
+        for j in range(0, len(self.sender.messages[index])):
+            r = self.sender.messages[index][j].get()
+            t.append(r)
+        for player in self.receivers:
+            r = player.messages[index].get()
+            t.append(r)
+        return t
+
+    def printAllTransfers(self):
+        columns = []
+        numPlayers = len(self.receivers) + 1
+        numCols = (3 * numPlayers) - 3
+        p0Cols = (numPlayers - 1) * 2
+        for i in range(0, numCols):
+            if i <= p0Cols - 1:
+                columns.append("P0")
+            else:
+                columns.append("P{}".format((i - p0Cols) + 1))
+        table = pd.DataFrame(self.transfers, columns = columns)
+        print(table)
+
 

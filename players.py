@@ -7,6 +7,8 @@ class Player(object):
     def __init__(self, id, params):
         self.id = id
         self.messages = []
+        self.c_messages = []
+        self.j_messages = []
         self.params = params
         print("Player {} created".format(self.id))
 
@@ -18,11 +20,22 @@ class Player(object):
 
     # Choose a bit 1, 0 weighted according to self.params.p as provided by protocol
     def pickBit(self):
-        r = helpers.uRandomInt(1) % 100
-        return 1 if (r / 100 <= self.params.p) else 0
+        r = helpers.uRandomInt(16) % 100
+        return 1 if (r / 100 < self.params.a) else 0
 
     def receiveOTMessage(self, message: ms.message):
         self.messages.append(message)
+    
+    def getTotalOnes(self):
+        total = 0
+        for message in self.messages:
+            if isinstance(message, list):
+                for m in message:
+                    total += 1 if m.bit == 1 else 0
+            else:
+                if message.bit == 1:
+                    total += 1
+        return total
 
 # Imagine a bicycle wheel. A "spoke" player is one on the outside
 # All players P2+ will be spoke players
