@@ -18,7 +18,7 @@ class Player(object):
     def createBloomFilter(self, m, n, hashes):
         self.bloom_filter = bloom_filter.new(m, n, hashes)
 
-    # Choose a bit 1, 0 weighted according to self.params.p as provided by protocol
+    # Choose a bit 1, 0 weighted according to self.params.a as provided by protocol
     def pickBit(self):
         r = helpers.uRandomInt(16) % 100
         return 1 if (r / 100 < self.params.a) else 0
