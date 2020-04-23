@@ -1,4 +1,5 @@
 import hashlib
+import helpers
 
 # Houses and generates the k has functions used for the bloom filters
 class hashes(object):
@@ -11,6 +12,9 @@ class hashes(object):
     # This is not secure. Don't do this at home kids.
     def getHash(self, id, value):
         h = self.hash()
+        if isinstance(value, int):
+            value = str(value)
+        # id = helpers.int_to_string(id)
         h.update(str(id).encode())
         h.update(value.encode())
         return h.digest()

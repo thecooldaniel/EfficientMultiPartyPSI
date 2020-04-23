@@ -29,7 +29,7 @@ class protocol(object):
         n = self.params.PlayerInputSize
         hashes = self.hashes
         for player in self.players:
-            player.createBloomFilter(m, n, hashes)
+            player.createBloomFilter( hashes)
             # player.bloom_filter.print("Player {}: ".format(player.id))
 
     def testBloomFilters(self):

@@ -1,5 +1,6 @@
 import message as ms
 import bloom_filter
+import garbled_bloom_filter as gbf
 import helpers
 
 # Base player class. Houses properties and methods common to both player types
@@ -15,8 +16,8 @@ class Player(object):
     def identify(self):
         return self.id
 
-    def createBloomFilter(self, m, n, hashes):
-        self.bloom_filter = bloom_filter.new(m, n, hashes)
+    def createBloomFilter(self, hashes):
+        self.bloom_filter = bloom_filter.new(self.params.Nbf, self.params.PlayerInputSize, hashes)
 
     # Choose a bit 1, 0 weighted according to self.params.a as provided by protocol
     def pickBit(self):
@@ -48,3 +49,6 @@ class PlayerSpoke(Player):
 class PlayerHub(Player):
     def storeTransfer(self, transfer):
         self.messages.append(transfer)
+    
+    def createGarbledBloomFilter(self, hashes):
+        self.garbled_bloom_filter = gbf.new(self.params.Nbf, self.params.PlayerInputSize, self.params.bitLength, hashes)

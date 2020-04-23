@@ -2,6 +2,7 @@ import message as ms
 import players
 import helpers
 import pandas as pd
+import os
 
 # Simulates the random OT stage
 class random_ot(object):
@@ -14,8 +15,8 @@ class random_ot(object):
 
     def genRandomString(self):
         m = [0] * 2
-        m[0] = helpers.uRandomInt(self.params.bitLength)
-        m[1] = helpers.uRandomInt(self.params.bitLength)
+        m[0] = os.urandom(self.params.bitLength)
+        m[1] = os.urandom(self.params.bitLength)
         return m
     
     def performTransfers(self):

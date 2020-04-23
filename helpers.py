@@ -20,3 +20,18 @@ def uRandomInt(bytes):
     rhex = binascii.hexlify(r)
     return int(rhex, 16)
 
+# Convert a utf-8 string to int
+def string_to_int(string):
+  i = string.encode('utf8')
+  i = binascii.hexlify(i)
+  i = int(i, 16)
+  return i
+
+# Convert an int to utf-8
+def int_to_string(num):
+  i = hex(num)
+  i = i[2:]
+  i = i.encode('ascii')
+  i = binascii.unhexlify(i)
+  i = i.decode('utf-8')
+  return i
