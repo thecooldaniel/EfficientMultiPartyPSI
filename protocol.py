@@ -25,11 +25,8 @@ class protocol(object):
     
     def initBloomFilters(self):
         print("\nInitializing Bloom Filters...")
-        m = self.params.Nbf
-        n = self.params.PlayerInputSize
-        hashes = self.hashes
         for player in self.players:
-            player.createBloomFilter( hashes)
+            player.createBloomFilter(self.getPlayerOneshashes)
             # player.bloom_filter.print("Player {}: ".format(player.id))
 
     def testBloomFilters(self):
@@ -71,6 +68,7 @@ class protocol(object):
             ones = player.getTotalOnes()
             ideal = self.params.Not * self.params.a
             print("P{} has {} ones. a * Not: {}".format(player.id, ones, ideal))
+
 
 
 def new(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf):

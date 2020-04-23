@@ -6,7 +6,7 @@ import garbled_bloom_filter as gbf
 
 NumPlayers = 3 
 PlayerInputSize = 5
-Nbf = 20
+Nbf = 21
 SecParam = 20
 Nmaxones = 10
 bitLength = 128
@@ -18,6 +18,8 @@ Protocol.performRandomOT()
 Protocol.getPlayerOnes()
 
 ngbf = gbf.new(Protocol.params.Nbf, Protocol.params.PlayerInputSize, Protocol.params.bitLength, Protocol.hashes)
+
+
 ngbf.add("testing")
 ngbf.add(753)
 ngbf.add("yessir")
