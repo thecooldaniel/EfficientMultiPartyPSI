@@ -37,6 +37,9 @@ class Player(object):
                     total += 1
         return total
 
+# Extend player class
+# Holds the messages of each player
+
 # Imagine a bicycle wheel. A "spoke" player is one on the outside
 # All players P2+ will be spoke players
 class PlayerSpoke(Player):

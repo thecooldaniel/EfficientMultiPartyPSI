@@ -72,8 +72,14 @@ class protocol(object):
             ideal = self.params.Not * self.params.a
             print("P{} has {} ones. a * Not: {}".format(player.id, ones, ideal))
 
+    def performCutandChoose(self):
+        C = self.params.Not * self.params.p
+        for player in self.players:
+            for i in range(0, C-1):
+                player.c_messages.add(player.messages[i])
+            for i in range(C, len(player.messages)):
+                player.j_messages.add(player.messages[i])
 
 def new(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf):
         return protocol(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf)
         
-    
