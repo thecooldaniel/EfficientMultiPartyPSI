@@ -14,8 +14,8 @@ p = 0.25
 a = 0.3
 
 Protocol = protocol.new(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf)
-Protocol.performRandomOT()
-Protocol.getPlayerOnes()
+Protocol.perform_RandomOT()
+Protocol.get_AllPlayersOnes()
 Protocol.performCutandChoose()
 
 a=18
