@@ -28,9 +28,9 @@ class garbled_bloom_filter(object):
                 else:
                     r = os.urandom(self.bitLength)
                     self.indices[j] = r
-                    finalShare = bytes([ a ^ b for (a,b) in zip(finalShare, r) ])
+                    finalShare = helpers.xor_byte_array(finalShare, r)
             else:
-                finalShare = bytes([ a ^ b for (a,b) in zip(finalShare, self.indices[j]) ])
+                finalShare = helpers.xor_byte_array(finalShare, self.indices[j])
         self.indices[emptyslot] = finalShare
 
     def check(self, val):
@@ -38,7 +38,7 @@ class garbled_bloom_filter(object):
         for i in range(0, self.hashes.count):
             j = self.hashes.getHash(i, val)
             j = helpers.decfromdigest(j, self.m)
-            recovered = bytes([ a ^ b for (a,b) in zip(recovered, self.indices[j]) ])
+            recovered = helpers.xor_byte_array(recovered, self.indices[j])
         return int.from_bytes(recovered, 'big')
         
     def clear(self):

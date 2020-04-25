@@ -1,7 +1,10 @@
 import message as ms
 import bloom_filter
 import garbled_bloom_filter as gbf
+import randomized_gbf as rgbf
 import helpers
+import hashes as h
+import binascii
 
 # Base player class. Houses properties and methods common to both player types
 class Player(object):
@@ -13,7 +16,7 @@ class Player(object):
         self.injective_function = []
         self.params = params
         self.inputSet = []
-        self.genRandomInputs()
+        self.create_RandomInputs()
         print("Player {} created".format(self.id))
 
     def identify(self):
@@ -60,24 +63,53 @@ class Player(object):
                     total += 1
         return total
 
-    # Extend player class
-    # Holds the messages of each player
-    def genRandomInputs(self):
-        for _ in range(0, self.params.PlayerInputSize):
-            r = helpers.uRandomInt(2)
+    def create_RandomInputs(self):
+        r_index = helpers.uRandomInt(16) % self.params.PlayerInputSize
+        for i in range(0, self.params.PlayerInputSize):
+            if i == r_index:
+                r = self.params.shared_random
+            else:
+                r = helpers.uRandomInt(16) % 1000
             self.inputSet.append(r)
 
 # Imagine a bicycle wheel. A "spoke" player is one on the outside
 # All players P2+ will be spoke players
 class PlayerSpoke(Player):
-    def storeMessage(self, message):
+    def store_Message(self, message):
         self.messages.append(message)
 
 # Imagine a bicycle wheel. A "hub" player is one in the middle
 # p0 and p1 will both always be hub players
 class PlayerHub(Player):
-    def storeTransfer(self, transfer):
+    def store_Transfer(self, transfer):
         self.messages.append(transfer)
     
-    def createGarbledBloomFilter(self, hashes):
+    def create_GarbledBloomFilter(self, hashes):
         self.garbled_bloom_filter = gbf.new(self.params.Nbf, self.params.PlayerInputSize, self.params.bitLength, hashes)
+
+    def create_RandomizedGBF(self, hashes):
+       self.randomized_gbf = rgbf.new(self, hashes)
+    
+    def add_InputsToGBF(self):
+        for elem in self.inputSet:
+            self.garbled_bloom_filter.add(elem)
+
+    def create_XOR_sums(self, players):
+        self.randomized_gbf.create_XOR_sums(players)
+    
+    def create_SummaryValsToShare(self, hashes):
+        sumValues = []
+        for i in range(0, len(self.inputSet)):
+            elem = self.inputSet[i]
+            sumVal = self.randomized_gbf.get_GBF_XOR_sum(elem)
+            sumVal = int.from_bytes(sumVal, 'big')
+            # sumVal = binascii.hexlify(sumVal)
+            # sumVal = 
+            sumVal = str(sumVal)
+            sumVal = str(elem) + sumVal
+            sumVal = hashes.randomOracle(sumVal)
+            sumValues.append(sumVal)
+        return sumValues
+    
+    # def gen_SummaryValue(self):
+    #     a = 1
