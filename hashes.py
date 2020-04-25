@@ -18,6 +18,13 @@ class hashes(object):
         h.update(str(id).encode())
         h.update(value.encode())
         return h.digest()
+    
+    def randomOracle(self, value):
+        h = self.hash()
+        if isinstance(value, int):
+            value = str(value)
+        h.update(value.encode())
+        return h.digest()
 
 # Pattern to gain the "new" keyword
 # in the namespace without naming the main

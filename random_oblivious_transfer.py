@@ -29,7 +29,7 @@ class random_ot(object):
                 receiver.receiveOTMessage(m[b])
                 t.append(m[0])
                 t.append(m[1])
-            self.sender.storeTransfer(t)
+            self.sender.store_Transfer(t)
     
     def getAllTransfersFromPlayers(self):
         transfers = []

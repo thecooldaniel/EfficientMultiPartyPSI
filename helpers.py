@@ -35,3 +35,6 @@ def int_to_string(num):
   i = binascii.unhexlify(i)
   i = i.decode('utf-8')
   return i
+
+def xor_byte_array(c, d):
+  return bytes([ a ^ b for (a,b) in zip(c, d) ])

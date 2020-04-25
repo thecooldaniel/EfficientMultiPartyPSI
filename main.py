@@ -18,7 +18,27 @@ Protocol.perform_RandomOT()
 Protocol.get_AllPlayersOnes()
 Protocol.create_InjectiveFunctions()
 
-ngbf = gbf.new(Protocol.params.Nbf, Protocol.params.PlayerInputSize, Protocol.params.bitLength, Protocol.hashes)
+Protocol.players[0].create_RandomizedGBF(Protocol.hashes)
+Protocol.players[0].create_XOR_sums([ Protocol.players[1], Protocol.players[2] ])
+vals0 = Protocol.players[0].create_rGBF_XOR_sums( Protocol.hashes )
+
+Protocol.players[1].create_RandomizedGBF(Protocol.hashes)
+Protocol.players[1].create_XOR_sums([ Protocol.players[1], Protocol.players[2] ])
+vals1 = Protocol.players[1].create_rGBF_XOR_sums( Protocol.hashes )
+
+for i in range(0, len(vals0)):
+    for j in range(0, len(vals1)):
+        if vals0[i] == vals1[j]:
+            print("Intersection at {}".format(vals0[i]))
+
+# Protocol.players[0].create_XOR_sums([ Protocol.players[1], Protocol.players[2] ])
+# Protocol.players[1].create_XOR_sums([ Protocol.players[1], Protocol.players[2] ])
+
+# Protocol.players[0].create_GarbledBloomFilter(Protocol.hashes)
+# Protocol.players[0].add_InputsToGBF()
+
+
+
 
 
 # ngbf.add("testing")
