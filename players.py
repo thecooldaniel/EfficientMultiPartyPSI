@@ -27,10 +27,11 @@ class Player(object):
         for val in self.inputSet:
             self.bloom_filter.add(val)
 
+    # TODO: loop through messages for every index of bloom_filter
     def create_InjectiveFunction(self):
         mIndex = 0
         for index in self.bloom_filter.indices:
-            while index != self.messages[mIndex].bit:
+            while index != self.j_messages[mIndex].bit:
                 mIndex += 1
             self.injective_function.append(mIndex)
             mIndex += 1
@@ -39,7 +40,7 @@ class Player(object):
     def test_InjectiveFunction(self):
         for index, val in enumerate(self.bloom_filter.indices):
             mi = self.injective_function[index]
-            if val != self.messages[mi].bit:
+            if val != self.j_messages[mi].bit:
                 print("Player {} Injective function incorrect".format(self.id))
                 return
         print("Player {} injective function valid".format(self.id))
@@ -103,13 +104,8 @@ class PlayerHub(Player):
             elem = self.inputSet[i]
             sumVal = self.randomized_gbf.get_GBF_XOR_sum(elem)
             sumVal = int.from_bytes(sumVal, 'big')
-            # sumVal = binascii.hexlify(sumVal)
-            # sumVal = 
             sumVal = str(sumVal)
             sumVal = str(elem) + sumVal
             sumVal = hashes.randomOracle(sumVal)
             sumValues.append(sumVal)
         return sumValues
-    
-    # def gen_SummaryValue(self):
-    #     a = 1

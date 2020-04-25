@@ -3,6 +3,7 @@ import players
 import hashes
 import bloom_filter as bf
 import random_oblivious_transfer as rot
+import math
 
 class protocol(object):
     def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf):
@@ -86,12 +87,12 @@ class protocol(object):
         self.players[1].id = 1
 
     def performCutandChoose(self):
-        C = self.params.Not * self.params.p
+        C = math.floor(self.params.Not * self.params.p)
         for player in self.players:
             for i in range(0, C-1):
-                player.c_messages.add(player.messages[i])
+                player.c_messages.append(player.messages[i])
             for i in range(C, len(player.messages)):
-                player.j_messages.add(player.messages[i])
+                player.j_messages.append(player.messages[i])
 
 def new(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf):
         return protocol(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf)

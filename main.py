@@ -18,6 +18,8 @@ Protocol.perform_RandomOT()
 Protocol.get_AllPlayersOnes()
 Protocol.performCutandChoose()
 
+Protocol.create_InjectiveFunctions()
+
 Protocol.players[0].create_RandomizedGBF(Protocol.hashes)
 Protocol.players[0].create_XOR_sums([ Protocol.players[1], Protocol.players[2] ])
 vals0 = Protocol.players[0].create_SummaryValsToShare( Protocol.hashes )
