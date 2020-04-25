@@ -20,11 +20,11 @@ Protocol.create_InjectiveFunctions()
 
 Protocol.players[0].create_RandomizedGBF(Protocol.hashes)
 Protocol.players[0].create_XOR_sums([ Protocol.players[1], Protocol.players[2] ])
-vals0 = Protocol.players[0].create_rGBF_XOR_sums( Protocol.hashes )
+vals0 = Protocol.players[0].create_SummaryValsToShare( Protocol.hashes )
 
 Protocol.players[1].create_RandomizedGBF(Protocol.hashes)
 Protocol.players[1].create_XOR_sums([ Protocol.players[1], Protocol.players[2] ])
-vals1 = Protocol.players[1].create_rGBF_XOR_sums( Protocol.hashes )
+vals1 = Protocol.players[1].create_SummaryValsToShare( Protocol.hashes )
 
 for i in range(0, len(vals0)):
     for j in range(0, len(vals1)):
