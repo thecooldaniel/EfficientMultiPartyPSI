@@ -85,9 +85,14 @@ class protocol(object):
         print( self.players[0].messages[5][0].owner.messages[50].owner.id )
         self.players[1].id = 1
 
-
+    def performCutandChoose(self):
+        C = self.params.Not * self.params.p
+        for player in self.players:
+            for i in range(0, C-1):
+                player.c_messages.add(player.messages[i])
+            for i in range(C, len(player.messages)):
+                player.j_messages.add(player.messages[i])
 
 def new(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf):
         return protocol(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf)
         
-    

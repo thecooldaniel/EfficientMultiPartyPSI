@@ -60,6 +60,8 @@ class Player(object):
                     total += 1
         return total
 
+    # Extend player class
+    # Holds the messages of each player
     def genRandomInputs(self):
         for _ in range(0, self.params.PlayerInputSize):
             r = helpers.uRandomInt(2)
