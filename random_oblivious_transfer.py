@@ -24,7 +24,7 @@ class random_ot(object):
             t = []
             for receiver in self.receivers:
                 r = self.genRandomString()
-                m = ms.genMessagesFromBitPair(r)
+                m = ms.genMessagesFromBitPair(receiver, r)
                 b = receiver.pickBit()
                 receiver.receiveOTMessage(m[b])
                 t.append(m[0])
@@ -42,10 +42,16 @@ class random_ot(object):
         t = []
         for j in range(0, len(self.sender.messages[index])):
             r = self.sender.messages[index][j].get()
-            t.append(r)
+            owner = "P{}".format(r[0].id) 
+            bit = "Bit: " + str(r[1])
+            value = r[2]
+            t.append( (owner, bit, value) )
         for player in self.receivers:
             r = player.messages[index].get()
-            t.append(r)
+            owner = "P{}".format(r[0].id) 
+            bit = "Bit: " + str(r[1])
+            value = r[2]
+            t.append((owner, bit, value))
         return t
 
     def printAllTransfers(self):

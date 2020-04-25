@@ -14,19 +14,20 @@ p = 0.25
 a = 0.3
 
 Protocol = protocol.new(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf)
-Protocol.performRandomOT()
-Protocol.getPlayerOnes()
+Protocol.perform_RandomOT()
+Protocol.get_AllPlayersOnes()
+Protocol.create_InjectiveFunctions()
 
 ngbf = gbf.new(Protocol.params.Nbf, Protocol.params.PlayerInputSize, Protocol.params.bitLength, Protocol.hashes)
 
 
-ngbf.add("testing")
-ngbf.add(753)
-ngbf.add("yessir")
-ngbf.add("foobar")
-r = helpers.int_to_string(ngbf.check("testing"))
-r2 = ngbf.check(753)
-r3 = helpers.int_to_string(ngbf.check("yessir"))
-r4 = helpers.int_to_string(ngbf.check("foobar"))
+# ngbf.add("testing")
+# ngbf.add(753)
+# ngbf.add("yessir")
+# ngbf.add("foobar")
+# r = helpers.int_to_string(ngbf.check("testing"))
+# r2 = ngbf.check(753)
+# r3 = helpers.int_to_string(ngbf.check("yessir"))
+# r4 = helpers.int_to_string(ngbf.check("foobar"))
 
 a=1

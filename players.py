@@ -10,21 +10,43 @@ class Player(object):
         self.messages = []
         self.c_messages = []
         self.j_messages = []
+        self.injective_function = []
         self.params = params
+        self.inputSet = []
+        self.genRandomInputs()
         print("Player {} created".format(self.id))
 
     def identify(self):
         return self.id
 
-    def createBloomFilter(self, hashes):
+    def create_BloomFilter(self, hashes):
         self.bloom_filter = bloom_filter.new(self.params.Nbf, self.params.PlayerInputSize, hashes)
+        for val in self.inputSet:
+            self.bloom_filter.add(val)
+
+    def create_InjectiveFunction(self):
+        mIndex = 0
+        for index in self.bloom_filter.indices:
+            while index != self.messages[mIndex].bit:
+                mIndex += 1
+            self.injective_function.append(mIndex)
+            mIndex += 1
+        self.test_InjectiveFunction()
+
+    def test_InjectiveFunction(self):
+        for index, val in enumerate(self.bloom_filter.indices):
+            mi = self.injective_function[index]
+            if val != self.messages[mi].bit:
+                print("Player {} Injective function incorrect".format(self.id))
+                return
+        print("Player {} injective function valid".format(self.id))
 
     # Choose a bit 1, 0 weighted according to self.params.a as provided by protocol
     def pickBit(self):
         r = helpers.uRandomInt(16) % 100
         return 1 if (r / 100 < self.params.a) else 0
 
-    def receiveOTMessage(self, message: ms.message):
+    def receiveOTMessage(self, message):
         self.messages.append(message)
     
     def getTotalOnes(self):
@@ -37,6 +59,11 @@ class Player(object):
                 if message.bit == 1:
                     total += 1
         return total
+
+    def genRandomInputs(self):
+        for _ in range(0, self.params.PlayerInputSize):
+            r = helpers.uRandomInt(2)
+            self.inputSet.append(r)
 
 # Imagine a bicycle wheel. A "spoke" player is one on the outside
 # All players P2+ will be spoke players
