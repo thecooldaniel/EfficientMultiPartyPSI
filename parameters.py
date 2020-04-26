@@ -2,13 +2,13 @@ import math
 import helpers
 
 class Paramaters(object):
-    def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a, b):
+    def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a):
         self.NumPlayers = NumPlayers
         self.Nmaxones = Nmaxones
         self.PlayerInputSize = PlayerInputSize
         self.p = p
         self.a = a
-        self.b = b
+        self.b = 0.05
         self.Nbf = self.Calc_Nbf()
         self.SecParam = SecParam
         self.bitLength = bitLength // 8 #uRandom takes bytes, not bits
@@ -18,12 +18,12 @@ class Paramaters(object):
         # TODO: Add logic that will increment Nmaxones to increase gamme to 0 if negative
         self.p1bound = self.Calc_p1bound()
         self.gamma = self.Calc_Gamma()
-        if(not self.CheckGamma(self.p1bound)):
+        if(not self.CheckGamma(self.gamma, self.p1bound)):
             print("Gamma out of bounds, please reconfigure the input parameters")
             exit()
         self.Not = self.Calc_Not()
         self.gammaStar = self.Calc_GammaStar()
-        if(not self.CheckGamma(self.Not)):
+        if(not self.CheckGamma(self.gammaStar, self.Not)):
             print("GammaStar out of bounds, please reconfigure the input parameters")
             exit()
         print("k = {}".format(self.k))
@@ -31,8 +31,9 @@ class Paramaters(object):
         print("gamma = {}".format(self.gamma))
         print("gammaStar = {}".format(self.gammaStar))
 
-    def CheckGamma(self, bound):
-        return self.gamma <= (self.SecParam + math.sqrt( pow(self.SecParam, 2) + ( 8 * self.SecParam * bound ) ) ) / (2 * self.p * bound)
+    def CheckGamma(self, gamma, bound):
+        r = (self.SecParam + math.sqrt( pow(self.SecParam, 2) + ( 8 * self.SecParam * bound ) ) ) / (2 * self.p * bound)
+        return gamma <= r
 
     def Calc_p1bound(self):
         return self.PlayerInputSize * self.k + self.Nmaxones

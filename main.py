@@ -5,33 +5,46 @@ import bloom_filter as bf
 import garbled_bloom_filter as gbf
 
 NumPlayers = 3 
-PlayerInputSize = 100
+PlayerInputSize = 10
 SecParam = 40
-Nmaxones = 100
-bitLength = 256
+bitLength = 128
+
+# These parameters are meant for illustration and fast execution
+# they are not considered secure or optimal
+Nmaxones = 40
 p = 0.25 # Fraction of messages to use for Cut and Choose
 a = 0.25 # Probability a 1 is chosen by a player
-b = 0.05 # Desired probability of a bloom-filter false-positive
 
-Protocol = protocol.new(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a, b)
+# Initialize the protocol by calculating parameters,
+# creating the players, and generating random inputs
+# Note: at least 1 shared value is guaranteed
+Protocol = protocol.new(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a)
+
+# Perform the random oblivious transfer simulation for P0...Pt
 Protocol.perform_RandomOT()
-Protocol.get_AllPlayersOnes()
+Protocol.print_PlayerROTTable()
+Protocol.print_PlayerMessageStats()
+
+# Perform cut-and-choose simulation for P0...Pt
 Protocol.perform_CutandChoose()
 
+# Create bloom filters for P1...Pt
+Protocol.create_BloomFilters()
+
+# Create P1...Pt's injective functions
 Protocol.create_InjectiveFunctions()
 
-Protocol.players[0].create_RandomizedGBF(Protocol.hashes)
-Protocol.players[0].create_XOR_sums([ Protocol.players[1], Protocol.players[2] ])
-vals0 = Protocol.players[0].create_SummaryValsToShare( Protocol.hashes )
+# Instantiate P0's and P1's rGBF objects
+Protocol.create_RandomizedGBFs()
 
-Protocol.players[1].create_RandomizedGBF(Protocol.hashes)
-Protocol.players[1].create_XOR_sums([ Protocol.players[1], Protocol.players[2] ])
-vals1 = Protocol.players[1].create_SummaryValsToShare( Protocol.hashes )
+# P0 performs XOR summation on its own j_messages[injective_func] where bit=1
+# P1 performs XOR summation on all P1...Pt's j_messages[injective_func] where bit = P1...Pt's choice
+Protocol.perform_XORsummation()
 
-for i in range(0, len(vals0)):
-    for j in range(0, len(vals1)):
-        if vals0[i] == vals1[j]:
-            print("Intersection at {}".format(vals0[i]))
+# P0 calculates summary values for all elements of its input set
+# P1 calculates summary values for all elements of its input set (Every P1...Pt)
+Protocol.perform_SummaryValues()
 
-
-a=1
+# P1 receives P0s summary values, compares them to its own
+# Intersections are recorded and output
+Protocol.perform_Output()

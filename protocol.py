@@ -6,12 +6,12 @@ import random_oblivious_transfer as rot
 import math
 
 class protocol(object):
-    def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a, b):
+    def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a):
         self.players = []
-        self.params = pm.Paramaters(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a, b)
+        self.params = pm.Paramaters(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a)
         self.create_Players()
         self.hashes = hashes.new(self.params.k)
-        self.create_BloomFilters()
+        self.sumVals = []
     
     def create_Players(self):
         print("\nSimulating players joining protocol. Total: {}".format(self.params.NumPlayers))
@@ -25,69 +25,24 @@ class protocol(object):
             self.players.append(p)
     
     def create_BloomFilters(self):
-        print("\nCreating Bloom Filter simulation. BF length: {}".format(self.params.Nbf))
+        print("\nCreating Bloom Filters. BF length: {}".format(self.params.Nbf))
         for player in self.players:
             player.create_BloomFilter(self.hashes)
             # player.bloom_filter.print("Player {}: ".format(player.id))
 
-    def create_InjectiveFunctions(self):
-        print("\nCreating injective function simulation for every Pi:")
-        for player in self.players:
-            if player.id != 0:
-                player.create_InjectiveFunction()
-
-    def test_BloomFilter(self):
-        m = "hello"
-        print("\nPopulating Bloom Filters with value \"{}\"".format(m))
-        for player in self.players:
-            player.bloom_filter.add(m)
-            player.bloom_filter.print("Player {}: ".format(player.id))
-        print("\nEnsuring uniformity...")
-        valid = True
-        for i in range(0, len(self.players[0].bloom_filter.indices)):
-            p0 = self.players[0].bloom_filter.indices[i]
-            for j in range(1, len(self.players)):
-                if self.players[j].bloom_filter.indices[i] != p0:
-                    valid = False
-                    break
-        if valid:
-            print("Result: All Bloom Filters equal")
-        if not valid:
-            print("Result: Bloom filters inconsistent!")
-
-        print("Resetting Bloom Filters...")
-        for player in self.players:
-            player.bloom_filter.clear()
-    
     def perform_RandomOT(self):
-        print("\nSimulating Random OT Stage. Performing {} transfers in total:".format(self.params.Not))
+        print("\nPerforming Random Oblivious Transfer simulation. {} transfers in total:".format(self.params.Not))
         sender = self.players[0]
         receivers = []
         for i in range(1, len(self.players)):
             receivers.append(self.players[i])
 
-        randomOT = rot.random_ot(sender, receivers)
-        randomOT.performTransfers()
-        randomOT.getAllTransfersFromPlayers()
-        randomOT.printAllTransfers()
-    
-    def get_AllPlayersOnes(self):
-        print("\nCounting each player's \"1s\":")
-        for player in self.players:
-            ones = player.getTotalOnes()
-            ideal = self.params.Not * self.params.a
-            print("P{} has {} ones. a * Not: {}".format(player.id, ones, ideal))
-
-    def TestOwnershipTheory(self):
-        print("Output should be 1")
-        print( self.players[0].messages[5][0].owner.messages[50].owner.id )
-        self.players[1].id = 6
-        print("Output should be 6")
-        print( self.players[0].messages[5][0].owner.messages[50].owner.id )
-        self.players[1].id = 1
+        self.randomOT = rot.random_ot(sender, receivers)
+        self.randomOT.performTransfers()
 
     def perform_CutandChoose(self):
         C = math.floor(self.params.Not * self.params.p)
+        print("\nPerforming Cut and Choose simulation. Size of c: {}. Size of j: {}".format(C, self.params.Not - C))
         for player in self.players:
             for i in range(0, C-1):
                 player.c_messages.append(player.messages[i])
@@ -100,7 +55,45 @@ class protocol(object):
             for i in range(C, len(player.messages)):
                 player.j_messages.append(player.messages[i])
 
+    def create_InjectiveFunctions(self):
+        print("\nCreating injective functions for every Pi:")
+        for player in self.players:
+            if player.id != 0:
+                player.create_InjectiveFunction()
+    
+    def create_RandomizedGBFs(self):
+        for player in self.players[:2]:
+            player.create_RandomizedGBF(self.hashes)
 
-def new(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a, b):
-        return protocol(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a, b)
+    def perform_XORsummation(self):
+        Pi = self.players[1:]
+        for player in self.players[:2]:
+            player.create_XOR_sums(Pi)
+
+    def perform_SummaryValues(self):
+        self.sumVals = []
+        for player in self.players[:2]:
+            self.sumVals.append(player.create_SummaryValsToShare(self.hashes))
+
+    def perform_Output(self):
+        output = self.players[1].find_Intersections(self.sumVals[0])
+        print("\n")
+        for player in self.players:
+            print("Player {}'s input set: {}".format(player.id, player.inputSet))
+        print("\nIntersections found at these values: {}".format(output))
+
+    def print_PlayerROTTable(self):
+        self.randomOT.getAllTransfersFromPlayers()
+        self.randomOT.printAllTransfers()
+    
+    def print_PlayerMessageStats(self):
+        print("\nCounting each player's \"1s\":")
+        for player in self.players:
+            ones = player.getTotalOnes()
+            ideal = self.params.Not * self.params.a
+            print("P{} has {} ones. a * Not: {}".format(player.id, ones, ideal))
+
+
+def new(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a):
+        return protocol(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a)
         
