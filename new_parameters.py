@@ -52,7 +52,7 @@ class parameters(object):
                     sec = 0
                     mh = -1
                     threshold = -1
-                    maxOnes = compute(p, self.SecParam, minOnes, mh, threshold)
+                    maxOnes, mh, threshold = compute(p, self.SecParam, minOnes, mh, threshold)
 
                     while sec < 128 and c < 120:
                         c += cStep
@@ -158,4 +158,4 @@ def compute(p, kappa, minOnes, mh, tau):
     tau = computeTau(mh, p, kappa)
     ma = computeMa(p, tau, kappa)
     maxOnes = computeMaxOnes(ma, p, kappa)
-    return maxOnes
+    return (maxOnes, mh, tau)

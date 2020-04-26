@@ -3,6 +3,7 @@ import players
 import hashes
 import bloom_filter as bf
 import random_oblivious_transfer as rot
+import math
 
 class protocol(object):
     def __init__(self, NumPlayers, PlayerInputSize, SecParam, bitLength):
@@ -85,6 +86,19 @@ class protocol(object):
         print( self.players[0].messages[5][0].owner.messages[50].owner.id )
         self.players[1].id = 1
 
+    def perform_CutandChoose(self):
+        C = math.floor(self.params.Not * self.params.p)
+        for player in self.players:
+            for i in range(0, C-1):
+                player.c_messages.append(player.messages[i])
+                totalOnes = 0
+                if player.id != 0:
+                    for m in player.c_messages:
+                        totalOnes += 1 if m.bit == 1 else 0
+                    if totalOnes > self.params.Nmaxones:
+                        print("Protocol aborted: Player {} has {} ones, which is more than {}".format(player.id, totalOnes, player.params.Nmaxones))
+            for i in range(C, len(player.messages)):
+                player.j_messages.append(player.messages[i])
 
 
 def new(NumPlayers, PlayerInputSize, SecParam, bitLength):

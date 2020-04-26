@@ -3,18 +3,20 @@ import helpers
 
 # TODO: Update params with source from [35]
 class Paramaters(object):
-    def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf):
+    def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a, b):
         self.NumPlayers = NumPlayers
         self.Nmaxones = Nmaxones
         self.PlayerInputSize = PlayerInputSize
-        self.k = math.ceil( (Nbf / PlayerInputSize) * math.log(2) )
         self.p = p
         self.a = a
+        self.b = b
+        self.Nbf = self.Calc_Nbf()
         self.SecParam = SecParam
-        self.Nbf = Nbf
         self.bitLength = bitLength // 8 #uRandom takes bytes, not bits
         self.shared_random = helpers.uRandomInt(16) % 10000
+        self.k = math.ceil( (self.Nbf / PlayerInputSize) * math.log(2) )
 
+        # TODO: Add logic that will increment Nmaxones to increase gamme to 0 if negative
         self.p1bound = self.Calc_p1bound()
         self.gamma = self.Calc_Gamma()
         if(not self.CheckGamma(self.p1bound)):
@@ -27,6 +29,8 @@ class Paramaters(object):
             exit()
         print("k = {}".format(self.k))
         print("Not = {}".format(self.Not))
+        print("gamma = {}".format(self.gamma))
+        print("gammaStar = {}".format(self.gammaStar))
 
     def CheckGamma(self, bound):
         checkValue = (self.SecParam + math.sqrt( pow(self.SecParam, 2) + ( 8 * self.SecParam * bound ) ) ) / (2 * self.p * bound)
@@ -49,3 +53,7 @@ class Paramaters(object):
         x = self.p  * self.Not
         r = math.floor( (self.Not - (self.Nbf + x)) / ( x ) )
         return int(r)
+
+    def Calc_Nbf(self):
+        m = -(self.PlayerInputSize * math.log(self.b))/(math.log(2)**2)
+        return int(m)
