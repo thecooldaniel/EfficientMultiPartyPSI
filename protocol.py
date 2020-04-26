@@ -6,9 +6,9 @@ import random_oblivious_transfer as rot
 import math
 
 class protocol(object):
-    def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf):
+    def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a, b):
         self.players = []
-        self.params = pm.Paramaters(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf)
+        self.params = pm.Paramaters(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a, b)
         self.create_Players()
         self.hashes = hashes.new(self.params.k)
         self.create_BloomFilters()
@@ -86,14 +86,21 @@ class protocol(object):
         print( self.players[0].messages[5][0].owner.messages[50].owner.id )
         self.players[1].id = 1
 
-    def performCutandChoose(self):
+    def perform_CutandChoose(self):
         C = math.floor(self.params.Not * self.params.p)
         for player in self.players:
             for i in range(0, C-1):
                 player.c_messages.append(player.messages[i])
+                totalOnes = 0
+                if player.id != 0:
+                    for m in player.c_messages:
+                        totalOnes += 1 if m.bit == 1 else 0
+                    if totalOnes > self.params.Nmaxones:
+                        print("Protocol aborted: Player {} has {} ones, which is more than {}".format(player.id, totalOnes, player.params.Nmaxones))
             for i in range(C, len(player.messages)):
                 player.j_messages.append(player.messages[i])
 
-def new(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf):
-        return protocol(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf)
+
+def new(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a, b):
+        return protocol(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a, b)
         
