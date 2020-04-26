@@ -5,6 +5,7 @@ import randomized_gbf as rgbf
 import helpers
 import hashes as h
 import binascii
+from random import SystemRandom
 
 # Base player class. Houses properties and methods common to both player types
 class Player(object):
@@ -46,8 +47,10 @@ class Player(object):
 
     # Choose a bit 1, 0 weighted according to self.params.a as provided by protocol
     def pickBit(self):
-        r = helpers.uRandomInt(16) % 100
-        return 1 if (r / 100 < self.params.a) else 0
+        frac = self.params.a * 1000
+        gen = SystemRandom()
+        r = gen.randrange(1000)
+        return 1 if (r < frac) else 0
 
     def receiveOTMessage(self, message):
         self.messages.append(message)

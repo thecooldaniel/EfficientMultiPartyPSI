@@ -1,13 +1,13 @@
-import parameters as pm
+import new_parameters as pm
 import players
 import hashes
 import bloom_filter as bf
 import random_oblivious_transfer as rot
 
 class protocol(object):
-    def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf):
+    def __init__(self, NumPlayers, PlayerInputSize, SecParam, bitLength):
         self.players = []
-        self.params = pm.Paramaters(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf)
+        self.params = pm.parameters(NumPlayers, PlayerInputSize, SecParam, bitLength)
         self.create_Players()
         self.hashes = hashes.new(self.params.k)
         self.create_BloomFilters()
@@ -87,7 +87,6 @@ class protocol(object):
 
 
 
-def new(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf):
-        return protocol(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf)
+def new(NumPlayers, PlayerInputSize, SecParam, bitLength):
+        return protocol(NumPlayers, PlayerInputSize, SecParam, bitLength)
         
-    

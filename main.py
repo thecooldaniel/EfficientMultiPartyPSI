@@ -5,15 +5,15 @@ import bloom_filter as bf
 import garbled_bloom_filter as gbf
 
 NumPlayers = 3 
-PlayerInputSize = 5
-Nbf = 21
-SecParam = 20
-Nmaxones = 10
+PlayerInputSize = 4
+SecParam = 40
+# Nmaxones = 3182
 bitLength = 128
-p = 0.25
-a = 0.3
+# p = 0.099 # Fraction of messages to use for Cut and Choose
+# a = 0.274 # Probability a 1 is chosen by a player
+# b = 0.05 # Desired probability of a bloom-filter false-positive
 
-Protocol = protocol.new(NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf)
+Protocol = protocol.new(NumPlayers, PlayerInputSize, SecParam, bitLength)
 Protocol.perform_RandomOT()
 Protocol.get_AllPlayersOnes()
 Protocol.create_InjectiveFunctions()

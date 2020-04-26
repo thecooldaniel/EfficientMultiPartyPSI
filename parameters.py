@@ -1,6 +1,7 @@
 import math
 import helpers
 
+# TODO: Update params with source from [35]
 class Paramaters(object):
     def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, p, a, SecParam, bitLength, Nbf):
         self.NumPlayers = NumPlayers
@@ -28,7 +29,9 @@ class Paramaters(object):
         print("Not = {}".format(self.Not))
 
     def CheckGamma(self, bound):
-        return self.gamma <= (self.SecParam + math.sqrt( pow(self.SecParam, 2) + ( 8 * self.SecParam * bound ) ) ) / (2 * self.p * bound)
+        checkValue = (self.SecParam + math.sqrt( pow(self.SecParam, 2) + ( 8 * self.SecParam * bound ) ) ) / (2 * self.p * bound)
+        print("Gamma check value: {}".format(checkValue))
+        return self.gamma <= checkValue
 
     def Calc_p1bound(self):
         return self.PlayerInputSize * self.k + self.Nmaxones
