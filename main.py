@@ -5,15 +5,15 @@ import bloom_filter as bf
 import garbled_bloom_filter as gbf
 
 NumPlayers = 3 
-PlayerInputSize = 10
+PlayerInputSize = 20 # 10
 SecParam = 40
 bitLength = 128
 
 # These parameters are meant for illustration and fast execution
 # they are not considered secure or optimal
-Nmaxones = 40
-p = 0.25 # Fraction of messages to use for Cut and Choose
-a = 0.25 # Probability a 1 is chosen by a player
+Nmaxones = 80 # 40
+p = 0.3 # 0.25 # Fraction of messages to use for Cut and Choose
+a = 0.27 # 0.25 # Probability a 1 is chosen by a player
 
 # Initialize the protocol by calculating parameters,
 # creating the players, and generating random inputs
