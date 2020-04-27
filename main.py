@@ -42,7 +42,7 @@ Protocol.create_RandomizedGBFs()
 Protocol.perform_XORsummation()
 
 # P0 calculates summary values for all elements of its input set
-# P1 calculates summary values for all elements of its input set (Every P1...Pt)
+# P1 calculates summary values for all elements of its input set (Every P1...Pt input values)
 Protocol.perform_SummaryValues()
 
 # P1 receives P0s summary values, compares them to its own

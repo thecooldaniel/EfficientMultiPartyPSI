@@ -11,7 +11,7 @@ class Paramaters(object):
         self.b = 0.05
         self.Nbf = self.Calc_Nbf()
         self.SecParam = SecParam
-        self.bitLength = bitLength // 8 #uRandom takes bytes, not bits
+        self.byteLength = bitLength // 8 #uRandom takes bytes, not bits
         self.shared_random = helpers.uRandomInt(16) % 10000
         self.k = math.ceil( (self.Nbf / PlayerInputSize) * math.log(2) )
 
