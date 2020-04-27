@@ -80,6 +80,15 @@ class protocol(object):
         print("\n")
         for player in self.players:
             print("Player {}'s input set: {}".format(player.id, player.inputSet))
+        print("\n")
+        for index, _ in enumerate(self.sumVals):
+            pstr ="["
+            for elem in self.sumVals[index]:
+                elemm = int.from_bytes(elem, 'big')
+                pstr += "{:7.7}..., ".format(str(elemm))
+            pstr += "]"
+            print("Player {}'s summary values: {}".format(index, pstr))
+        
         print("\nIntersections found at these values: {}".format(output))
 
     def print_PlayerROTTable(self):
