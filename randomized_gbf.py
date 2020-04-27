@@ -6,12 +6,12 @@ class randomized_gbf(object):
         self.hashes = hashes
         self.indices = []
         self.m = owner.params.Nbf
-        self.bitLength = owner.params.bitLength
+        self.byteLength = owner.params.byteLength
 
     def create_XOR_sums(self, players):
         self.indices = []
         for i in range(0, self.m):
-            xor = int(0).to_bytes(self.bitLength, 'big')
+            xor = int(0).to_bytes(self.byteLength, 'big')
             for index, player in enumerate(players):
                 p_index = player.injective_function[i]
 
@@ -30,7 +30,7 @@ class randomized_gbf(object):
             self.indices.append(xor)
 
     def get_GBF_XOR_sum(self, elem):
-        xor_sum = int(0).to_bytes(self.bitLength, 'big')
+        xor_sum = int(0).to_bytes(self.byteLength, 'big')
         for i in range(0, self.hashes.count):
             j = self.hashes.getHash(i, elem)
             j = helpers.decfromdigest(j, self.m)

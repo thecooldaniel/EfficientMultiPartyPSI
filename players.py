@@ -27,14 +27,21 @@ class Player(object):
         for val in self.inputSet:
             self.bloom_filter.add(val)
 
-    # TODO: loop through messages for every index of bloom_filter
     def create_InjectiveFunction(self):
         mIndex = 0
-        for index in self.bloom_filter.indices:
-            while index != self.j_messages[mIndex].bit:
+        zeroCache = []
+        oneCache = []
+        bitCaches = [zeroCache, oneCache]
+        
+        for bit in self.bloom_filter.indices:
+            if len(bitCaches[bit]) != 0:
+                self.injective_function.append(bitCaches[bit].pop())
+            else:   
+                while bit != self.j_messages[mIndex].bit:
+                    bitCaches[1-bit].append(mIndex)
+                    mIndex += 1
+                self.injective_function.append(mIndex)
                 mIndex += 1
-            self.injective_function.append(mIndex)
-            mIndex += 1
         self.test_InjectiveFunction()
 
     def test_InjectiveFunction(self):
@@ -99,6 +106,7 @@ class PlayerHub(Player):
         self.randomized_gbf.create_XOR_sums(players)
     
     def create_SummaryValsToShare(self, hashes):
+        self.sumValues = []
         sumValues = []
         for i in range(0, len(self.inputSet)):
             elem = self.inputSet[i]
@@ -107,5 +115,14 @@ class PlayerHub(Player):
             sumVal = str(sumVal)
             sumVal = str(elem) + sumVal
             sumVal = hashes.randomOracle(sumVal)
+            self.sumValues.append((elem, sumVal))
             sumValues.append(sumVal)
         return sumValues
+    
+    def find_Intersections(self, sumValues):
+        output = []
+        for (elem, P1sumVal) in self.sumValues:
+            for P0sumVal in sumValues:
+                if P0sumVal == P1sumVal:
+                    output.append(elem)
+        return output

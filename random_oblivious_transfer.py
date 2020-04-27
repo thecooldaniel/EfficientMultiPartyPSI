@@ -15,8 +15,8 @@ class random_ot(object):
 
     def genRandomString(self):
         m = [0] * 2
-        m[0] = os.urandom(self.params.bitLength)
-        m[1] = os.urandom(self.params.bitLength)
+        m[0] = os.urandom(self.params.byteLength)
+        m[1] = os.urandom(self.params.byteLength)
         return m
     
     def performTransfers(self):
