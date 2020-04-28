@@ -3,6 +3,10 @@ import players
 import helpers
 import pandas as pd
 import os
+import PySimpleGUI as sg
+
+# Turn all debug prints to print in a window
+print = sg.Print
 
 # Simulates the random OT stage
 class random_ot(object):

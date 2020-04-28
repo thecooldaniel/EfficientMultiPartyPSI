@@ -1,5 +1,9 @@
 import math
 import helpers
+import PySimpleGUI as sg
+
+# Turn all debug prints to print in a window
+print = sg.Print
 
 class Paramaters(object):
     def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a):

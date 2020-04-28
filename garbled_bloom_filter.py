@@ -2,6 +2,10 @@ import math
 import hashes as h
 import helpers
 import os
+import PySimpleGUI as sg
+
+# Turn all debug prints to print in a window
+print = sg.Print
 
 class garbled_bloom_filter(object):
     def __init__(self, m, n, bitLength, hashes):

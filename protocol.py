@@ -4,6 +4,10 @@ import hashes
 import bloom_filter as bf
 import random_oblivious_transfer as rot
 import math
+import PySimpleGUI as sg
+
+# Turn all debug prints to print in a window
+print = sg.Print
 
 class protocol(object):
     def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a):

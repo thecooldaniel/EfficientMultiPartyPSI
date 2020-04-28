@@ -5,6 +5,10 @@ import randomized_gbf as rgbf
 import helpers
 import hashes as h
 import binascii
+import PySimpleGUI as sg
+
+# Turn all debug prints to print in a window
+print = sg.Print
 
 # Base player class. Houses properties and methods common to both player types
 class Player(object):

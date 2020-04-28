@@ -1,6 +1,10 @@
 import math
 import hashes as h
 import helpers
+import PySimpleGUI as sg
+
+# Turn all debug prints to print in a window
+print = sg.Print
 
 # Houses the data structures and methods for creating and maintaining a Bloom Filter
 class bloom_filter(object):
