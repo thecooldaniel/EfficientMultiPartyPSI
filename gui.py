@@ -78,7 +78,8 @@ while True:
         output = Protocol.print_PlayerROTTable()
         print(output)
         print("\nCounting each player's \"1s\":")
-        Protocol.print_PlayerMessageStats()
+        output = Protocol.print_PlayerMessageStats()
+        print(output)
 
         # Perform cut-and-choose simulation for P0...Pt
         print("\nPerforming Cut and Choose simulation. Size of c: {}. Size of j: {}".format(Protocol.params.C, Protocol.params.Not - Protocol.params.C))
@@ -90,7 +91,8 @@ while True:
 
         # Create P1...Pt's injective functions
         print("\nCreating injective functions for every Pi:")
-        Protocol.create_InjectiveFunctions()
+        output = Protocol.create_InjectiveFunctions()
+        print(output)
 
         # Instantiate P0's and P1's rGBF objects
         print("\nCreating randomized GBF for every Pi")

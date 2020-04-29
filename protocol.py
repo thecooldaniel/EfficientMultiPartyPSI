@@ -55,9 +55,13 @@ class protocol(object):
                 player.j_messages.append(player.messages[i])
 
     def create_InjectiveFunctions(self):
+        forPrint = ""
         for player in self.players:
             if player.id != 0:
                 player.create_InjectiveFunction()
+                forPrint += "\nPlayer {}'s Injective function: {}".format(player.id, player.injective_function)
+        return forPrint
+        
     
     def create_RandomizedGBFs(self):
         for player in self.players[:2]:
@@ -78,7 +82,7 @@ class protocol(object):
         output = self.players[1].find_Intersections(self.sumVals[0])
         forPrint += "\n"
         for player in self.players:
-            forPrint += "Player {}'s input set: {}".format(player.id, player.inputSet)
+            forPrint += "\nPlayer {}'s input set: {}".format(player.id, player.inputSet)
         forPrint += "\n"
         for index, _ in enumerate(self.sumVals):
             pstr ="["
