@@ -30,10 +30,8 @@ class Paramaters(object):
         if(not self.CheckGamma(self.gammaStar, self.Not)):
             print("GammaStar out of bounds, please reconfigure the input parameters")
             exit()
-        print("k = {}".format(self.k))
-        print("Not = {}".format(self.Not))
-        print("gamma = {}".format(self.gamma))
-        print("gammaStar = {}".format(self.gammaStar))
+
+        self.C = math.floor(self.Not * self.p)
 
     def CheckGamma(self, gamma, bound):
         r = (self.SecParam + math.sqrt( pow(self.SecParam, 2) + ( 8 * self.SecParam * bound ) ) ) / (2 * self.p * bound)

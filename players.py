@@ -21,7 +21,7 @@ class Player(object):
         self.params = params
         self.inputSet = []
         self.create_RandomInputs()
-        print("Player {} created".format(self.id))
+        # print("Player {} created".format(self.id))
 
     def identify(self):
         return self.id
@@ -46,7 +46,7 @@ class Player(object):
                     mIndex += 1
                 self.injective_function.append(mIndex)
                 mIndex += 1
-        self.test_InjectiveFunction()
+        # self.test_InjectiveFunction()
 
     def test_InjectiveFunction(self):
         for index, val in enumerate(self.bloom_filter.indices):
