@@ -21,7 +21,7 @@ Nmaxones = 80 # 40
 p = 0.3 # 0.25 # Fraction of messages to use for Cut and Choose
 a = 0.27 # 0.25 # Probability a 1 is chosen by a player
 
-perform_protocol = sg.ReadButton('Start Protocol', font=('Segoe UI', 12), key='-RUN-')
+perform_protocol = sg.ReadButton('Start Simulation', font=('Segoe UI', 12), key='-RUN-')
 stepTracker = 0
 Protocol = None
 
@@ -159,6 +159,7 @@ while True:
             # Intersections are recorded and output
             output = Protocol.perform_Output()
             wOut.print(output + "\n", background_color='yellow', text_color='black')
+            perform_protocol.Update("Restart Simulation")
             stepTracker = 0
        
 window.close()
