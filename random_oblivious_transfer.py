@@ -69,6 +69,6 @@ class random_ot(object):
             else:
                 columns.append("P{}".format((i - p0Cols) + 1))
         table = pd.DataFrame(self.transfers, columns = columns)
-        print(table)
+        return table
 
 
