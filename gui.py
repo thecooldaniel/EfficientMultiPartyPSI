@@ -127,7 +127,7 @@ while True:
             wOut.print("gammaStar = {} \n".format(Protocol.params.gammaStar))
 
             wOut.print("\nSimulating players joining protocol. Total: {}".format(Protocol.params.NumPlayers), background_color='#284050', text_color='white')
-            wOut.print("\nStep " + str(stepTracker) +" finished\n", background_color='#284050', text_color='white')
+            wOut.print("\nStep " + str(stepTracker-1) +" finished\n", background_color='#284050', text_color='white')
 
             perform_protocol.Update("Step {}: Perform Random Oblivious Transfers".format(stepTracker))
         
@@ -140,13 +140,13 @@ while True:
             wOut.print(output)
             wOut.print("\nCounting each player's \"1s\":")
             output = Protocol.print_PlayerMessageStats()
-            wOut.print(output + "\n\nStep " + str(stepTracker) +" finished\n")
+            wOut.print(output + "\n\nStep " + str(stepTracker-1) +" finished\n")
             perform_protocol.Update("Step {}: Perform Cut-and-Choose".format(stepTracker))
 
         elif stepTracker == 3:
             # Perform cut-and-choose simulation for P0...Pt
             wOut.print("\nPerforming Cut and Choose simulation. Size of c: {}. Size of j: {}".format(Protocol.params.C, Protocol.params.Not - Protocol.params.C), background_color='#284050', text_color='white')
-            wOut.print("\nStep " + str(stepTracker) +" finished\n", background_color='#284050', text_color='white')
+            wOut.print("\nStep " + str(stepTracker-1) +" finished\n", background_color='#284050', text_color='white')
             Protocol.perform_CutandChoose()
 
             perform_protocol.Update("Step {}: Create Bloom Filters".format(stepTracker))
@@ -155,7 +155,7 @@ while True:
             # Create bloom filters for P1...Pt
             wOut.print("\nCreating Bloom Filters. BF length: {}".format(Protocol.params.Nbf))
             Protocol.create_BloomFilters()
-            wOut.print("\nStep " + str(stepTracker) +" finished\n")
+            wOut.print("\nStep " + str(stepTracker-1) +" finished\n")
 
             perform_protocol.Update("Step {}: Create Injective functions".format(stepTracker))
 
@@ -180,7 +180,7 @@ while True:
             # P0 calculates summary values for all elements of its input set
             # P1 calculates summary values for all elements of its input set (Every P1...Pt input values)
             Protocol.perform_SummaryValues()
-            wOut.print("\nStep " + str(stepTracker) +" finished\n")
+            wOut.print("\nStep " + str(stepTracker-1) +" finished\n")
 
             perform_protocol.Update("Step {}: Finish protocol".format(stepTracker))
             
@@ -190,7 +190,7 @@ while True:
             # Intersections are recorded and output
             output = Protocol.perform_Output()
             wOut.print(output, background_color='#284050', text_color='white')
-            wOut.print("\nStep " + str(stepTracker) +" finished\n", background_color='#284050', text_color='white')
+            wOut.print("\nStep " + str(stepTracker-1) +" finished\n", background_color='#284050', text_color='white')
             perform_protocol.Update("Restart Simulation")
             stepTracker = 0
        
