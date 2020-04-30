@@ -11,7 +11,7 @@ import PySimpleGUI as sg
 sg.change_look_and_feel('DarkBlue2') 
 
 NumPlayers = 3 
-PlayerInputSize = 20 # 10
+PlayerInputSize = 30 # 10
 SecParam = 40
 bitLength = 128
 
@@ -32,10 +32,10 @@ layout = [
                 sg.Text('Number of players:', font=('Segoe UI', 12)), 
                 sg.Input('3', key='-NUMPLAYERS-', font=('Segoe UI', 12))
             ],
-            [
-                sg.Text('Player input size:', font=('Segoe UI', 12)),
-                sg.Slider(range=(30,120), default_value=80, orientation='h', key='-INPUTSIZE-')
-            ],
+            # [
+            #     sg.Text('Player input size:', font=('Segoe UI', 12)),
+            #     sg.Slider(range=(30,120), default_value=80, orientation='h', key='-INPUTSIZE-')
+            # ],
             [ 
                 sg.Text('Constant protocol parameters that will be used:', font=('Segoe UI', 12), size=(55,1)),
                 sg.Text('Parameters that will be calculated:', font=('Segoe UI', 12)),
@@ -89,7 +89,7 @@ while True:
         # creating the players, and generating random inputs
         # Note: at least 1 shared value is guaranteed
         NumPlayers = int(values['-NUMPLAYERS-'], 10)
-        PlayerInputSize = int(values['-INPUTSIZE-'])
+        # PlayerInputSize = int(values['-INPUTSIZE-'])
 
         Protocol = protocol.new(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a)
         wOut.print("\nStarting protocol...", background_color='yellow', text_color='black')
