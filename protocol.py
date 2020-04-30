@@ -28,9 +28,12 @@ class protocol(object):
             self.players.append(p)
     
     def create_BloomFilters(self):
+        forPrint = ""
         for player in self.players:
             player.create_BloomFilter(self.hashes)
+            forPrint += "Player {}'s bloom filter: \n{} \n".format(player.id, player.bloom_filter.indices)
             # player.bloom_filter.print("Player {}: ".format(player.id))
+        return forPrint
 
     def perform_RandomOT(self):
         sender = self.players[0]
@@ -59,7 +62,7 @@ class protocol(object):
         for player in self.players:
             if player.id != 0:
                 player.create_InjectiveFunction()
-                forPrint += "\nPlayer {}'s Injective function: {}".format(player.id, player.injective_function)
+                forPrint += "\nPlayer {}'s Injective function: \n{}".format(player.id, player.injective_function)
         return forPrint
         
     
@@ -68,9 +71,17 @@ class protocol(object):
             player.create_RandomizedGBF(self.hashes)
 
     def perform_XORsummation(self):
+        forPrint = ""
         Pi = self.players[1:]
         for player in self.players[:2]:
             player.create_XOR_sums(Pi)
+            pstr ="["
+            for _, elem in enumerate(player.randomized_gbf.indices):
+                elemm = int.from_bytes(elem, 'big')
+                pstr += "{:7.7}..., ".format(str(elemm))
+            pstr += "]"
+            forPrint += "\nPlayer {}'s rGBF: \n{}".format(player.id, pstr)
+        return forPrint
 
     def perform_SummaryValues(self):
         self.sumVals = []

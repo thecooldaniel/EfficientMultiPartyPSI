@@ -155,9 +155,10 @@ while True:
             perform_protocol.Update("Step {}: Create Bloom Filters".format(stepTracker))
 
         elif stepTracker == 4:
-            # Create bloom filters for P1...Pt
+            # Create bloom filters using j messages for P1...Pt
             wOut.print("\nCreating Bloom Filters. BF length: {}".format(Protocol.params.Nbf))
-            Protocol.create_BloomFilters()
+            output = Protocol.create_BloomFilters()
+            wOut.print(output)
             wOut.print("\nStep " + str(stepTracker-1) +" finished\n")
             perform_protocol.Update("Step {}: Create Injective functions".format(stepTracker))
 
@@ -176,8 +177,9 @@ while True:
 
             # P0 performs XOR summation on its own j_messages[injective_func] where bit=1
             # P1 performs XOR summation on all P1...Pt's j_messages[injective_func] where bit = P1...Pt's choice
-            Protocol.perform_XORsummation()
-
+            output = Protocol.perform_XORsummation()
+            wOut(output)
+            
             # P0 calculates summary values for all elements of its input set
             # P1 calculates summary values for all elements of its input set (Every P1...Pt input values)
             Protocol.perform_SummaryValues()
