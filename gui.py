@@ -23,6 +23,7 @@ a = 0.27 # 0.25 # Probability a 1 is chosen by a player
 
 perform_protocol = sg.ReadButton('Perform Protocol', font=('Segoe UI', 12), key='-RUN-')
 stepTracker = 0
+Protocol = None
 
 layout = [ 
             [sg.Text('Efficient Multi-Party PSI', size=(50,1), justification='left', font=('Segoe UI', 20))],
@@ -64,27 +65,28 @@ window = sg.Window('Private Set Intersection', layout, default_element_size=(50,
 
 while True:
     # Read the event that happened and the values dictionary
-    event, values = window.read(timeout=10)
+    event, values = window.read()
     # print(event, values)
     if event in (None, 'Exit'): 
         break
     if event == '-RUN-':
-        window['-OUTPUT-'].update('')
         perform_protocol.Update("Button clicked {} times".format(stepTracker) )
+        if stepTracker == 0:
+            window['-OUTPUT-'].update('')
         stepTracker += 1
-
-        # Initialize the protocol by calculating parameters,
-        # creating the players, and generating random inputs
-        # Note: at least 1 shared value is guaranteed
-        NumPlayers = int(values['-NUMPLAYERS-'], 10)
-        Protocol = protocol.new(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a)
-        print("k = {}".format(Protocol.params.k))
-        print("Not = {}".format(Protocol.params.Not))
-        print("gamma = {}".format(Protocol.params.gamma))
-        print("gammaStar = {}".format(Protocol.params.gammaStar))
-        print("\nSimulating players joining protocol. Total: {}".format(Protocol.params.NumPlayers))
+        if stepTracker == 1:
+            # Initialize the protocol by calculating parameters,
+            # creating the players, and generating random inputs
+            # Note: at least 1 shared value is guaranteed
+            NumPlayers = int(values['-NUMPLAYERS-'], 10)
+            Protocol = protocol.new(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a)
+            print("k = {}".format(Protocol.params.k))
+            print("Not = {}".format(Protocol.params.Not))
+            print("gamma = {}".format(Protocol.params.gamma))
+            print("gammaStar = {}".format(Protocol.params.gammaStar))
+            print("\nSimulating players joining protocol. Total: {}".format(Protocol.params.NumPlayers))
         
-    if ((event == '-RUN-') and (stepTracker == 2)):
+        if stepTracker == 2:
             # Perform the random oblivious transfer simulation for P0...Pt
             print("\nPerforming Random Oblivious Transfer simulation. {} transfers in total:".format(Protocol.params.Not))
             Protocol.perform_RandomOT()
@@ -93,18 +95,15 @@ while True:
             print("\nCounting each player's \"1s\":")
             output = Protocol.print_PlayerMessageStats()
             print(output)
-
-    if ((event == '-RUN-') and (stepTracker == 3)):
+        elif stepTracker == 3:
             # Perform cut-and-choose simulation for P0...Pt
             print("\nPerforming Cut and Choose simulation. Size of c: {}. Size of j: {}".format(Protocol.params.C, Protocol.params.Not - Protocol.params.C))
             Protocol.perform_CutandChoose()
-
-    if ((event == '-RUN-') and (stepTracker == 4)):
+        elif stepTracker == 4:
             # Create bloom filters for P1...Pt
             print("\nCreating Bloom Filters. BF length: {}".format(Protocol.params.Nbf))
             Protocol.create_BloomFilters()
-
-    if ((event == '-RUN-') and (stepTracker == 5)):
+        elif stepTracker == 5:
             # Create P1...Pt's injective functions
             print("\nCreating injective functions for every Pi:")
             output = Protocol.create_InjectiveFunctions()
@@ -126,4 +125,5 @@ while True:
             # Intersections are recorded and output
             output = Protocol.perform_Output()
             print(output)
+            stepTracker = 0
 window.close()
