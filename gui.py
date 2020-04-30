@@ -5,38 +5,33 @@ import bloom_filter as bf
 import garbled_bloom_filter as gbf
 import PySimpleGUI as sg
 
-# Turn all debug prints to print in a window
-# print = sg.Print
 
 sg.change_look_and_feel('DarkBlue2') 
-
-NumPlayers = 3 
-PlayerInputSize = 30 # 10
-SecParam = 40
-bitLength = 128
-
-# These parameters are meant for illustration and fast execution
-# they are not considered secure or optimal
-Nmaxones = 80 # 40
-p = 0.3 # 0.25 # Fraction of messages to use for Cut and Choose
-a = 0.27 # 0.25 # Probability a 1 is chosen by a player
 
 perform_protocol = sg.ReadButton('Start Simulation', font=('Segoe UI', 12), key='-RUN-')
 stepTracker = 0
 Protocol = None
+disableChecks = False
 
 layout = [ 
             [sg.Text('Efficient Multi-Party PSI', size=(50,1), justification='left', font=('Segoe UI', 20))],
             [sg.Text('By Malia Kency and John Owens', font=('Segoe UI', 13))],
             [sg.Text('These parameters are meant for illustration and fast execution, they are not considered secure or optimal', font=('Segoe UI', 13))],
-            [ 
-                sg.Text('Number of players:', font=('Segoe UI', 12)), 
-                sg.Input('3', key='-NUMPLAYERS-', font=('Segoe UI', 12))
+            [
+                sg.Frame('', [
+                    [sg.Checkbox('Let me break stuff', font=('Segoe UI', 12), key='-DISABLECHECKS-', enable_events=True)],
+                    [sg.Text('Number of players:', font=('Segoe UI', 12)), 
+                    sg.Input('3', key='-NUMPLAYERS-', font=('Segoe UI', 12), disabled=True)],
+                    [sg.Text('Player input size', font=('Segoe UI', 12)), 
+                    sg.Input('20', key='-INPUTSIZE-', font=('Segoe UI', 12), disabled=True)],
+                    [sg.Text('Weight of chosen 1s', font=('Segoe UI', 12)), 
+                    sg.Input('0.27', key='-A-', font=('Segoe UI', 12), disabled=True)],
+                    [sg.Text('Cut-and-Choose Prob', font=('Segoe UI', 12)), 
+                    sg.Input('0.3', key='-C-', font=('Segoe UI', 12), disabled=True)],
+                    [sg.Text('Number of max ones', font=('Segoe UI', 12)), 
+                    sg.Input('80', key='-NMAXONES-', font=('Segoe UI', 12), disabled=True)],
+                ]),
             ],
-            # [
-            #     sg.Text('Player input size:', font=('Segoe UI', 12)),
-            #     sg.Slider(range=(30,120), default_value=80, orientation='h', key='-INPUTSIZE-')
-            # ],
             [ 
                 sg.Text('Constant protocol parameters that will be used:', font=('Segoe UI', 12), size=(55,1)),
                 sg.Text('Parameters that will be calculated:', font=('Segoe UI', 12)),
@@ -62,8 +57,8 @@ layout = [
                         'gammaStar = Verifies the correct relationship between p, k, Not'],
                         size=(85,8), font=('Consolas', 10))
             ],
-            [sg.Multiline(key='-OUTPUT-', size=(300, 30), font=('Consolas', 10), autoscroll=True)],
-            [sg.Button('Clear', font=('Segoe UI', 12)), perform_protocol],
+            [sg.Multiline(key='-OUTPUT-', size=(300, 30), font=('Consolas', 10), autoscroll=True, text_color='white')],
+            [sg.Button('Reset', font=('Segoe UI', 12)), perform_protocol],
             [sg.Button('Exit', font=('Segoe UI', 12))],
          ]
 
@@ -75,73 +70,103 @@ while True:
     # print(event, values)
     if event in (None, 'Exit'): 
         break
-    if event == 'Clear':
+    if event == 'Reset':
         window['-OUTPUT-'].Update('')
+        perform_protocol.Update("Start Simulation")
         stepTracker = 0
+    if event == '-DISABLECHECKS-':
+        if values['-DISABLECHECKS-']:
+            window['-NUMPLAYERS-'].update(disabled=False)
+            window['-INPUTSIZE-'].update(disabled=False)
+            window['-A-'].update(disabled=False)
+            window['-C-'].update(disabled=False)
+            window['-NMAXONES-'].update(disabled=False)
+            disableChecks = True
+        else:
+            window['-NUMPLAYERS-'].update(disabled=True)
+            window['-INPUTSIZE-'].update(disabled=True)
+            window['-A-'].update(disabled=True)
+            window['-C-'].update(disabled=True)
+            window['-NMAXONES-'].update(disabled=True)
+            disableChecks = False
+
     if event == '-RUN-':
+        NumPlayers = 3 
+        PlayerInputSize = 30 # 10
+        SecParam = 40
+        bitLength = 128
+        Nmaxones = 80 # 40
+        p = 0.3
+        a = 0.27
+
+        if disableChecks:
+            PlayerInputSize = int(values['-INPUTSIZE-'])
+            NumPlayers = int(values['-NUMPLAYERS-'])
+            Nmaxones = int(values['-NMAXONES-'])
+            p = float(values['-C-'])
+            a = float(values['-A-'])
 
         wOut = window['-OUTPUT-']
-        # wOut.update('')
         
         if stepTracker == 0:
             window['-OUTPUT-'].update('')
         stepTracker += 1
 
         if stepTracker == 1:
+
             # Initialize the protocol by calculating parameters,
             # creating the players, and generating random inputs
             # Note: at least 1 shared value is guaranteed
-            NumPlayers = int(values['-NUMPLAYERS-'], 10)
             # PlayerInputSize = int(values['-INPUTSIZE-'])
 
-            Protocol = protocol.new(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a)
-            wOut.print("\nStarting protocol...", background_color='yellow', text_color='black')
-            wOut.print("k = {}".format(Protocol.params.k), background_color='yellow', text_color='black')
-            wOut.print("Not = {}".format(Protocol.params.Not), background_color='yellow', text_color='black')
-            wOut.print("gamma = {}".format(Protocol.params.gamma), background_color='yellow', text_color='black')
-            wOut.print("gammaStar = {} \n".format(Protocol.params.gammaStar), background_color='yellow', text_color='black')
+            Protocol = protocol.new(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a, disableChecks)
+            wOut.print("\nStarting protocol...")
+            wOut.print("k = {}".format(Protocol.params.k))
+            wOut.print("Not = {}".format(Protocol.params.Not))
+            wOut.print("gamma = {}".format(Protocol.params.gamma))
+            wOut.print("gammaStar = {} \n".format(Protocol.params.gammaStar))
 
-            wOut.print("\nSimulating players joining protocol. Total: {}\n".format(Protocol.params.NumPlayers), background_color='green', text_color='white')
+            wOut.print("\nSimulating players joining protocol. Total: {}\n".format(Protocol.params.NumPlayers), background_color='#284050', text_color='white')
 
             perform_protocol.Update("Step {}: Perform Random Oblivious Transfers".format(stepTracker))
         
         if stepTracker == 2:
             
            # Perform the random oblivious transfer simulation for P0...Pt
-            wOut.print("\nPerforming Random Oblivious Transfer simulation. {} transfers in total:".format(Protocol.params.Not), background_color='purple', text_color='white')
+            wOut.print("\nPerforming Random Oblivious Transfer simulation. {} transfers in total:".format(Protocol.params.Not))
             Protocol.perform_RandomOT()
             output = Protocol.print_PlayerROTTable()
-            wOut.print(output, background_color='purple', text_color='white')
-            wOut.print("\nCounting each player's \"1s\":", background_color='purple', text_color='white')
+            wOut.print(output)
+            wOut.print("\nCounting each player's \"1s\":")
             output = Protocol.print_PlayerMessageStats()
-            wOut.print(output + "\n", background_color='purple', text_color='white')
+            wOut.print(output + "\n")
             perform_protocol.Update("Step {}: Perform Cut-and-Choose".format(stepTracker))
 
         elif stepTracker == 3:
             # Perform cut-and-choose simulation for P0...Pt
-            wOut.print("\nPerforming Cut and Choose simulation. Size of c: {}. Size of j: {}\n".format(Protocol.params.C, Protocol.params.Not - Protocol.params.C), background_color='red', text_color='white')
+            wOut.print("\nPerforming Cut and Choose simulation. Size of c: {}. Size of j: {}\n".format(Protocol.params.C, Protocol.params.Not - Protocol.params.C), background_color='#284050', text_color='white')
             Protocol.perform_CutandChoose()
 
             perform_protocol.Update("Step {}: Create Bloom Filters".format(stepTracker))
 
         elif stepTracker == 4:
             # Create bloom filters for P1...Pt
-            wOut.print("\nCreating Bloom Filters. BF length: {} \n".format(Protocol.params.Nbf), background_color='blue', text_color='white')
+            wOut.print("\nCreating Bloom Filters. BF length: {} \n".format(Protocol.params.Nbf))
             Protocol.create_BloomFilters()
 
             perform_protocol.Update("Step {}: Create Injective functions".format(stepTracker))
 
         elif stepTracker == 5:
             # Create P1...Pt's injective functions
-            wOut.print("\nCreating injective functions for every Pi:",background_color='black', text_color='white')
+            wOut.print("\nCreating injective functions for every Pi:", background_color='#284050', text_color='white')
             output = Protocol.create_InjectiveFunctions()
-            wOut.print(output + "\n", background_color='black', text_color='white')
+            wOut.print(output + "\n", background_color='#284050', text_color='white')
 
             perform_protocol.Update("Step {}: Perform XOR sums and RGBF".format(stepTracker))
         
         elif stepTracker == 6:
             # Instantiate P0's and P1's rGBF objects
-            wOut.print("\nCreating randomized GBF for every Pi \n", background_color='white', text_color='black')
+            wOut.print("\nCreating randomized GBF for every Pi \n")
             Protocol.create_RandomizedGBFs()
 
             # P0 performs XOR summation on its own j_messages[injective_func] where bit=1
@@ -158,7 +183,7 @@ while True:
             # P1 receives P0s summary values, compares them to its own
             # Intersections are recorded and output
             output = Protocol.perform_Output()
-            wOut.print(output + "\n", background_color='yellow', text_color='black')
+            wOut.print(output + "\n", background_color='#284050', text_color='white')
             perform_protocol.Update("Restart Simulation")
             stepTracker = 0
        
