@@ -126,7 +126,8 @@ while True:
             wOut.print("gamma = {}".format(Protocol.params.gamma))
             wOut.print("gammaStar = {} \n".format(Protocol.params.gammaStar))
 
-            wOut.print("\nSimulating players joining protocol. Total: {}\n".format(Protocol.params.NumPlayers), background_color='#284050', text_color='white')
+            wOut.print("\nSimulating players joining protocol. Total: {}".format(Protocol.params.NumPlayers), background_color='#284050', text_color='white')
+            wOut.print("\nStep finished\n", background_color='#284050', text_color='white')
 
             perform_protocol.Update("Step {}: Perform Random Oblivious Transfers".format(stepTracker))
         
@@ -139,20 +140,22 @@ while True:
             wOut.print(output)
             wOut.print("\nCounting each player's \"1s\":")
             output = Protocol.print_PlayerMessageStats()
-            wOut.print(output + "\n")
+            wOut.print(output + "\n\nStep finished\n")
             perform_protocol.Update("Step {}: Perform Cut-and-Choose".format(stepTracker))
 
         elif stepTracker == 3:
             # Perform cut-and-choose simulation for P0...Pt
-            wOut.print("\nPerforming Cut and Choose simulation. Size of c: {}. Size of j: {}\n".format(Protocol.params.C, Protocol.params.Not - Protocol.params.C), background_color='#284050', text_color='white')
+            wOut.print("\nPerforming Cut and Choose simulation. Size of c: {}. Size of j: {}".format(Protocol.params.C, Protocol.params.Not - Protocol.params.C), background_color='#284050', text_color='white')
+            wOut.print("\nStep finished\n", background_color='#284050', text_color='white')
             Protocol.perform_CutandChoose()
 
             perform_protocol.Update("Step {}: Create Bloom Filters".format(stepTracker))
 
         elif stepTracker == 4:
             # Create bloom filters for P1...Pt
-            wOut.print("\nCreating Bloom Filters. BF length: {} \n".format(Protocol.params.Nbf))
+            wOut.print("\nCreating Bloom Filters. BF length: {}".format(Protocol.params.Nbf))
             Protocol.create_BloomFilters()
+            wOut.print("\nStep finished\n")
 
             perform_protocol.Update("Step {}: Create Injective functions".format(stepTracker))
 
@@ -160,13 +163,14 @@ while True:
             # Create P1...Pt's injective functions
             wOut.print("\nCreating injective functions for every Pi:", background_color='#284050', text_color='white')
             output = Protocol.create_InjectiveFunctions()
-            wOut.print(output + "\n", background_color='#284050', text_color='white')
+            wOut.print(output, background_color='#284050', text_color='white')
+            wOut.print("\nStep finished\n", background_color='#284050', text_color='white')
 
             perform_protocol.Update("Step {}: Perform XOR sums and RGBF".format(stepTracker))
         
         elif stepTracker == 6:
             # Instantiate P0's and P1's rGBF objects
-            wOut.print("\nCreating randomized GBF for every Pi \n")
+            wOut.print("\nCreating randomized GBF for every Pi")
             Protocol.create_RandomizedGBFs()
 
             # P0 performs XOR summation on its own j_messages[injective_func] where bit=1
@@ -176,14 +180,17 @@ while True:
             # P0 calculates summary values for all elements of its input set
             # P1 calculates summary values for all elements of its input set (Every P1...Pt input values)
             Protocol.perform_SummaryValues()
+            wOut.print("\nStep finished\n")
 
             perform_protocol.Update("Step {}: Finish protocol".format(stepTracker))
+            
         
         elif stepTracker == 7:
             # P1 receives P0s summary values, compares them to its own
             # Intersections are recorded and output
             output = Protocol.perform_Output()
-            wOut.print(output + "\n", background_color='#284050', text_color='white')
+            wOut.print(output, background_color='#284050', text_color='white')
+            wOut.print("\nStep finished\n", background_color='#284050', text_color='white')
             perform_protocol.Update("Restart Simulation")
             stepTracker = 0
        
