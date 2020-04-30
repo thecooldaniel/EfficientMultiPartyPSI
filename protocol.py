@@ -10,9 +10,9 @@ import PySimpleGUI as sg
 print = sg.Print
 
 class protocol(object):
-    def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a):
+    def __init__(self, NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a, disableChecks):
         self.players = []
-        self.params = pm.Paramaters(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a)
+        self.params = pm.Paramaters(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a, disableChecks)
         self.create_Players()
         self.hashes = hashes.new(self.params.k)
         self.sumVals = []
@@ -108,6 +108,6 @@ class protocol(object):
         return forPrint
 
 
-def new(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a):
-        return protocol(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a)
+def new(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a, disableChecks):
+        return protocol(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a, disableChecks)
         
