@@ -18,17 +18,23 @@ layout = [
             [sg.Text('These parameters are meant for illustration and fast execution, they are not considered secure or optimal', font=('Segoe UI', 12, 'italic'))],
             [
                 sg.Frame('', [
-                    [sg.Checkbox('Let me break stuff', font=('Segoe UI', 11), key='-DISABLECHECKS-', enable_events=True)],
-                    [sg.Text('Number of players:', font=('Segoe UI', 11)), 
-                    sg.Input('3', key='-NUMPLAYERS-', font=('Segoe UI', 11), disabled=True)],
-                    [sg.Text('Player input size:    ', font=('Segoe UI', 11)), 
-                    sg.Input('20', key='-INPUTSIZE-', font=('Segoe UI', 11), disabled=True)],
-                    [sg.Text('Weight of chosen 1s:  ', font=('Segoe UI', 11)), 
-                    sg.Input('0.27', key='-A-', font=('Segoe UI', 11), disabled=True)],
-                    [sg.Text('Cut-and-Choose Prob:', font=('Segoe UI', 11)), 
-                    sg.Input('0.3', key='-C-', font=('Segoe UI', 11), disabled=True)],
-                    [sg.Text('Number of max ones: ', font=('Segoe UI', 11)), 
-                    sg.Input('80', key='-NMAXONES-', font=('Segoe UI', 11), disabled=True)],
+                    [
+                        sg.Checkbox('Let me break stuff', font=('Segoe UI', 10), key='-DISABLECHECKS-', enable_events=True)
+                    ],
+                    [
+                        sg.Text('Number of players:    ', font=('Segoe UI', 10)), 
+                        sg.Input('3', key='-NUMPLAYERS-', font=('Segoe UI', 10), disabled=True), 
+                        sg.Text('        Player input size:', font=('Segoe UI', 10)), 
+                        sg.Input('20', key='-INPUTSIZE-', font=('Segoe UI', 10), disabled=True)],
+                    [
+                        sg.Text('Weight of chosen 1s:  ', font=('Segoe UI', 10)), 
+                        sg.Input('0.27', key='-A-', font=('Segoe UI', 10), disabled=True), 
+                        sg.Text('Cut-and-Choose Prob:', font=('Segoe UI', 10)), 
+                        sg.Input('0.3', key='-C-', font=('Segoe UI', 10), disabled=True)],
+                    [
+                        sg.Text('Number of max ones: ', font=('Segoe UI', 10)), 
+                        sg.Input('80', key='-NMAXONES-', font=('Segoe UI', 10), disabled=True)
+                    ],
                 ]),
             ],
             [ 
@@ -56,11 +62,11 @@ layout = [
                         'gammaStar = Verifies the correct relationship between p, k, Not'],
                         size=(85,8), font=('Consolas', 10))
             ],
-            [sg.Multiline(key='-OUTPUT-', size=(200, 17), font=('Consolas', 10), autoscroll=True, text_color='white')],
+            [sg.Multiline(key='-OUTPUT-', size=(200, 20), font=('Consolas', 10), autoscroll=True, text_color='white')],
             [sg.Button('Reset', font=('Segoe UI', 12)), perform_protocol, sg.Button('Exit', font=('Segoe UI', 12))],
          ]
 
-window = sg.Window('Private Set Intersection', layout, location=(0,0), resizable=True)
+window = sg.Window('Private Set Intersection', layout, location=(100,40), resizable=True)
 
 while True:
     # Read the event that happened and the values dictionary
@@ -125,9 +131,10 @@ while True:
             wOut.print("gammaStar = {} \n".format(Protocol.params.gammaStar))
 
             wOut.print("\nSimulating players joining protocol. Total: {}".format(Protocol.params.NumPlayers), background_color='#284050', text_color='white')
+            wOut.print("At least one intersection will occur at the value: {}".format(Protocol.params.shared_random), background_color="red", text_color="white")
             wOut.print("\nStep " + str(stepTracker-1) +" finished\n", background_color='#284050', text_color='white')
             perform_protocol.Update("Step {}: Perform Random Oblivious Transfers".format(stepTracker))
-        
+
         if stepTracker == 2:
             
            # Perform the random oblivious transfer simulation for P0...Pt
@@ -180,8 +187,9 @@ while True:
         elif stepTracker == 7:
             # P1 receives P0s summary values, compares them to its own
             # Intersections are recorded and output
-            output = Protocol.perform_Output()
+            output, intersections = Protocol.perform_Output()
             wOut.print(output, background_color='#284050', text_color='white')
+            wOut.print(intersections, background_color="red", text_color="white")
             wOut.print("\nStep " + str(stepTracker-1) +" finished\n", background_color='#284050', text_color='white')
             perform_protocol.Update("Restart Simulation")
             stepTracker = 0

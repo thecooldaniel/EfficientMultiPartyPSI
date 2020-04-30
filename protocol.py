@@ -91,8 +91,8 @@ class protocol(object):
             pstr += "]"
             forPrint += "\nPlayer {}'s summary values: {}".format(index, pstr)
         
-        forPrint += "\n\nIntersections found at these values: {}".format(output)
-        return forPrint
+        intersections = "\nIntersections found at these values: {}\nGuaranteed intersection value was: {}\n".format(output, self.params.shared_random)
+        return forPrint, intersections
 
     def print_PlayerROTTable(self):
         self.randomOT.getAllTransfersFromPlayers()
