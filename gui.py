@@ -57,7 +57,7 @@ layout = [
                         'gammaStar = Verifies the correct relationship between p, k, Not'],
                         size=(85,8), font=('Consolas', 10))
             ],
-            [sg.Multiline(key='-OUTPUT-', size=(300, 30), font=('Consolas', 10), autoscroll=True, text_color='white')],
+            [sg.Multiline(key='-OUTPUT-', size=(200, 30), font=('Consolas', 10), autoscroll=True, text_color='white')],
             [sg.Button('Reset', font=('Segoe UI', 12)), perform_protocol],
             [sg.Button('Exit', font=('Segoe UI', 12))],
          ]
