@@ -14,25 +14,38 @@ bitLength = 128
 Nmaxones = 80 # 40
 p = 0.3 # 0.25 # Fraction of messages to use for Cut and Choose
 a = 0.27 # 0.25 # Probability a 1 is chosen by a player
+disableChecks = False
 
 # Initialize the protocol by calculating parameters,
 # creating the players, and generating random inputs
 # Note: at least 1 shared value is guaranteed
-Protocol = protocol.new(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a)
+Protocol = protocol.new(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a, disableChecks)
+print("\nStarting protocol...")
+print("k = {}".format(Protocol.params.k))
+print("Not = {}".format(Protocol.params.Not))
+print("gamma = {}".format(Protocol.params.gamma))
+print("gammaStar = {} \n".format(Protocol.params.gammaStar))
+print("\nSimulating players joining protocol. Total: {}".format(Protocol.params.NumPlayers))
 
 # Perform the random oblivious transfer simulation for P0...Pt
+print("\nPerforming Random Oblivious Transfer simulation. {} transfers in total:".format(Protocol.params.Not))
 Protocol.perform_RandomOT()
-Protocol.print_PlayerROTTable()
-Protocol.print_PlayerMessageStats()
+print(Protocol.print_PlayerROTTable())
+print("\nCounting each player's \"1s\":")
+print(Protocol.print_PlayerMessageStats())
+
 
 # Perform cut-and-choose simulation for P0...Pt
+print("Performing Cut and Choose simulation. Size of c: {}. Size of j: {}".format(Protocol.params.C, Protocol.params.Not - Protocol.params.C))
 Protocol.perform_CutandChoose()
 
 # Create bloom filters for P1...Pt
+print("Creating Bloom Filters. BF length: {}".format(Protocol.params.Nbf))
 Protocol.create_BloomFilters()
 
 # Create P1...Pt's injective functions
-Protocol.create_InjectiveFunctions()
+print("Creating injective functions for every Pi:")
+print(Protocol.create_InjectiveFunctions())
 
 # Instantiate P0's and P1's rGBF objects
 Protocol.create_RandomizedGBFs()
@@ -47,4 +60,4 @@ Protocol.perform_SummaryValues()
 
 # P1 receives P0s summary values, compares them to its own
 # Intersections are recorded and output
-Protocol.perform_Output()
+print(Protocol.perform_Output())
