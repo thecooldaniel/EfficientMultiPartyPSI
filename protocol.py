@@ -80,7 +80,6 @@ class protocol(object):
     def perform_Output(self):
         forPrint = ""
         output = self.players[1].find_Intersections(self.sumVals[0])
-        forPrint += "\n"
         for player in self.players:
             forPrint += "\nPlayer {}'s input set: {}".format(player.id, player.inputSet)
         forPrint += "\n"
