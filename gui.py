@@ -25,38 +25,42 @@ perform_protocol = sg.ReadButton('Perform Protocol', font=('Segoe UI', 12), key=
 stepTracker = 0
 
 layout = [ 
-            [sg.Text('Efficient Multi-Party PSI', size=(50,1), justification='center', font=('Segoe UI', 20))],
+            [sg.Text('Efficient Multi-Party PSI', size=(50,1), justification='left', font=('Segoe UI', 20))],
             [sg.Text('By Malia Kency and John Owens', font=('Segoe UI', 13))],
-            [sg.Text('')],
             [ 
-                sg.Text('Constant protocol parameters that will be used:', font=('Segoe UI', 12)),
+                sg.Text('Number of players:'), sg.Input('3', key='-NUMPLAYERS-')
+            ],
+            [ 
+                sg.Text('Constant protocol parameters that will be used:', font=('Segoe UI', 12), size=(55,1)),
                 sg.Text('Parameters that will be calculated:', font=('Segoe UI', 12)),
             ],
+           
             [ sg.Listbox(
                     values = [
-                        'NumPlayers         = Total number of players, P\N{LATIN SUBSCRIPT SMALL LETTER I}',
-                        'PlayerInputSize    = Size of the players input sets',
-                        'N_BF               = Length fo Bloom Filter',
-                        'k                  = Number of hash functions to use',
-                        'SecParam (kappa)   = Security Paramter',
-                        'N_maxones          = Max number of ones a player is allowed after cut-and-choose',
-                        'p                  = Percentage of total messages to be used for cut-and-choose',
-                        'a                  = Sampling weight of 1s vs. 0s for every P\N{LATIN SUBSCRIPT SMALL LETTER I}'],
-                    size=(70,8), font=('Consolas', 10)),
+                        'NumPlayers      = Total number of players, P\N{LATIN SUBSCRIPT SMALL LETTER I}',
+                        'PlayerInputSize = Size of the players input sets',
+                        'SecParam (kappa)   = Security Paramter = 40 as described',
+                        'bitLength       = length of random generated strings = 128 as described',
+                        'Nmaxones        = Max number of ones a player is allowed after cut-and-choose',
+                        'p               = Percentage of total messages to be used for cut-and-choose',
+                        'a               = Sampling weight of 1s vs. 0s for every P\N{LATIN SUBSCRIPT SMALL LETTER I}'],
+                    size=(85,8), font=('Consolas', 10)),
                 sg.Listbox(
                     values = [
-                        'N_OT              = Total number of Random Oblivious Transfer',
-                        'm\N{LATIN SUBSCRIPT SMALL LETTER h}                = The number of 1s a player chooses',
-                        'gamma (\N{GREEK SMALL LETTER GAMMA})         = Verifies the correct relationship between p, k, m\N{LATIN SUBSCRIPT SMALL LETTER h}',
-                        'gammaStar (\N{GREEK SMALL LETTER GAMMA}*)    = Verifies the correct relationship between p, k, N_OT'],
-                        size=(70,8), font=('Consolas', 10))
+                        'Not       = Total number of Random Oblivious Transfer',
+                        'Nbf       = Size of the player\'s bloom_filter. Calculated on initalization',
+                        'k         = Number of hash functions to use. Calculated on initalization',
+                        'm\N{LATIN SUBSCRIPT SMALL LETTER h}        = The number of 1s a player chooses',
+                        'gamma     = Verifies the correct relationship between p, k, m\N{LATIN SUBSCRIPT SMALL LETTER h}',
+                        'gammaStar = Verifies the correct relationship between p, k, Not'],
+                        size=(85,8), font=('Consolas', 10))
             ],
             [sg.Output(key='-OUTPUT-', size=(300, 20), font=('Consolas', 10))],
             [perform_protocol],
             [sg.Button('Exit', font=('Segoe UI', 12))],
          ]
 
-window = sg.Window('Private Set Intersection', layout, default_element_size=(50,1), grab_anywhere=True, )
+window = sg.Window('Private Set Intersection', layout, default_element_size=(50,1) )
 
 while True:
     # Read the event that happened and the values dictionary
@@ -65,11 +69,14 @@ while True:
     if event in (None, 'Exit'): 
         break
     if event == '-RUN-':
+        window['-OUTPUT-'].update('')
+        perform_protocol.Update("Button clicked {} times".format(stepTracker) )
         stepTracker += 1
-        perform_protocol.Update("Update Protocol")
+
         # Initialize the protocol by calculating parameters,
         # creating the players, and generating random inputs
         # Note: at least 1 shared value is guaranteed
+        NumPlayers = int(values['-NUMPLAYERS-'], 10)
         Protocol = protocol.new(NumPlayers, Nmaxones, PlayerInputSize, SecParam, bitLength, p, a)
         print("k = {}".format(Protocol.params.k))
         print("Not = {}".format(Protocol.params.Not))
@@ -97,7 +104,7 @@ while True:
             print("\nCreating Bloom Filters. BF length: {}".format(Protocol.params.Nbf))
             Protocol.create_BloomFilters()
 
-     if ((event == '-RUN-') and (stepTracker == 5)):
+    if ((event == '-RUN-') and (stepTracker == 5)):
             # Create P1...Pt's injective functions
             print("\nCreating injective functions for every Pi:")
             output = Protocol.create_InjectiveFunctions()
