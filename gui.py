@@ -5,7 +5,6 @@ import bloom_filter as bf
 import garbled_bloom_filter as gbf
 import PySimpleGUI as sg
 
-
 sg.change_look_and_feel('DarkBlue2') 
 
 perform_protocol = sg.ReadButton('Start Simulation', font=('Segoe UI', 12), key='-RUN-')
@@ -14,8 +13,7 @@ Protocol = None
 disableChecks = False
 
 layout = [ 
-            [sg.Text('Efficient Multi-Party PSI', size=(50,1), justification='left', font=('Segoe UI', 20))],
-            [sg.Text('By Malia Kency and John Owens', font=('Segoe UI', 13))],
+            [sg.Text('Efficient Multi-Party PSI', justification='left', font=('Segoe UI', 20)), sg.Text('By Malia Kency and John Owens', font=('Segoe UI', 13))],
             [sg.Text('These parameters are meant for illustration and fast execution, they are not considered secure or optimal', font=('Segoe UI', 13))],
             [
                 sg.Frame('', [
@@ -57,9 +55,8 @@ layout = [
                         'gammaStar = Verifies the correct relationship between p, k, Not'],
                         size=(85,8), font=('Consolas', 10))
             ],
-            [sg.Multiline(key='-OUTPUT-', size=(200, 30), font=('Consolas', 10), autoscroll=True, text_color='white')],
-            [sg.Button('Reset', font=('Segoe UI', 12)), perform_protocol],
-            [sg.Button('Exit', font=('Segoe UI', 12))],
+            [sg.Multiline(key='-OUTPUT-', size=(200, 26), font=('Consolas', 10), autoscroll=True, text_color='white')],
+            [sg.Button('Exit', font=('Segoe UI', 12)), sg.Button('Reset', font=('Segoe UI', 12)), perform_protocol]
          ]
 
 window = sg.Window('Private Set Intersection', layout, default_element_size=(50,1) )
