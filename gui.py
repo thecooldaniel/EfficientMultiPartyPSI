@@ -21,13 +21,13 @@ layout = [
                     [sg.Checkbox('Let me break stuff', font=('Segoe UI', 11), key='-DISABLECHECKS-', enable_events=True)],
                     [sg.Text('Number of players:', font=('Segoe UI', 11)), 
                     sg.Input('3', key='-NUMPLAYERS-', font=('Segoe UI', 11), disabled=True)],
-                    [sg.Text('Player input size', font=('Segoe UI', 11)), 
+                    [sg.Text('Player input size:    ', font=('Segoe UI', 11)), 
                     sg.Input('20', key='-INPUTSIZE-', font=('Segoe UI', 11), disabled=True)],
-                    [sg.Text('Weight of chosen 1s', font=('Segoe UI', 11)), 
+                    [sg.Text('Weight of chosen 1s:  ', font=('Segoe UI', 11)), 
                     sg.Input('0.27', key='-A-', font=('Segoe UI', 11), disabled=True)],
-                    [sg.Text('Cut-and-Choose Prob', font=('Segoe UI', 11)), 
+                    [sg.Text('Cut-and-Choose Prob:', font=('Segoe UI', 11)), 
                     sg.Input('0.3', key='-C-', font=('Segoe UI', 11), disabled=True)],
-                    [sg.Text('Number of max ones', font=('Segoe UI', 11)), 
+                    [sg.Text('Number of max ones: ', font=('Segoe UI', 11)), 
                     sg.Input('80', key='-NMAXONES-', font=('Segoe UI', 11), disabled=True)],
                 ]),
             ],
@@ -56,11 +56,11 @@ layout = [
                         'gammaStar = Verifies the correct relationship between p, k, Not'],
                         size=(85,8), font=('Consolas', 10))
             ],
-            [sg.Multiline(key='-OUTPUT-', size=(200, 26), font=('Consolas', 10), autoscroll=True, text_color='white')],
+            [sg.Multiline(key='-OUTPUT-', size=(200, 17), font=('Consolas', 10), autoscroll=True, text_color='white')],
             [sg.Button('Reset', font=('Segoe UI', 12)), perform_protocol, sg.Button('Exit', font=('Segoe UI', 12))],
          ]
 
-window = sg.Window('Private Set Intersection', layout, default_element_size=(50,1), location=(0,0), resizable=True)
+window = sg.Window('Private Set Intersection', layout, location=(0,0), resizable=True)
 
 while True:
     # Read the event that happened and the values dictionary
@@ -126,10 +126,6 @@ while True:
 
             wOut.print("\nSimulating players joining protocol. Total: {}".format(Protocol.params.NumPlayers), background_color='#284050', text_color='white')
             wOut.print("\nStep " + str(stepTracker-1) +" finished\n", background_color='#284050', text_color='white')
-
-            wOut.print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------",
-                background_color='black')
-
             perform_protocol.Update("Step {}: Perform Random Oblivious Transfers".format(stepTracker))
         
         if stepTracker == 2:
@@ -142,10 +138,6 @@ while True:
             wOut.print("\nCounting each player's \"1s\":")
             output = Protocol.print_PlayerMessageStats()
             wOut.print(output + "\n\nStep " + str(stepTracker-1) +" finished\n")
-
-            wOut.print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------",
-                background_color='black')
-                
             perform_protocol.Update("Step {}: Perform Cut-and-Choose".format(stepTracker))
 
         elif stepTracker == 3:
@@ -153,10 +145,6 @@ while True:
             wOut.print("\nPerforming Cut and Choose simulation. Size of c: {}. Size of j: {}".format(Protocol.params.C, Protocol.params.Not - Protocol.params.C), background_color='#284050', text_color='white')
             wOut.print("\nStep " + str(stepTracker-1) +" finished\n", background_color='#284050', text_color='white')
             Protocol.perform_CutandChoose()
-
-            wOut.print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------",
-                background_color='black')
-
             perform_protocol.Update("Step {}: Create Bloom Filters".format(stepTracker))
 
         elif stepTracker == 4:
@@ -164,10 +152,6 @@ while True:
             wOut.print("\nCreating Bloom Filters. BF length: {}".format(Protocol.params.Nbf))
             Protocol.create_BloomFilters()
             wOut.print("\nStep " + str(stepTracker-1) +" finished\n")
-
-            wOut.print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------",
-                background_color='black')
-
             perform_protocol.Update("Step {}: Create Injective functions".format(stepTracker))
 
         elif stepTracker == 5:
@@ -175,11 +159,7 @@ while True:
             wOut.print("\nCreating injective functions for every Pi:", background_color='#284050', text_color='white')
             output = Protocol.create_InjectiveFunctions()
             wOut.print(output, background_color='#284050', text_color='white')
-            wOut.print("\nStep" + str(stepTracker) +" finished\n", background_color='#284050', text_color='white')
-
-            wOut.print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------",
-                background_color='black')
-                
+            wOut.print("\nStep " + str(stepTracker-1) +" finished\n", background_color='#284050', text_color='white')  
             perform_protocol.Update("Step {}: Perform XOR sums and RGBF".format(stepTracker))
         
         elif stepTracker == 6:
@@ -195,23 +175,14 @@ while True:
             # P1 calculates summary values for all elements of its input set (Every P1...Pt input values)
             Protocol.perform_SummaryValues()
             wOut.print("\nStep " + str(stepTracker-1) +" finished\n")
-
-            wOut.print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------",
-                background_color='black')
-
             perform_protocol.Update("Step {}: Finish protocol".format(stepTracker))
-            
-        
+
         elif stepTracker == 7:
             # P1 receives P0s summary values, compares them to its own
             # Intersections are recorded and output
             output = Protocol.perform_Output()
             wOut.print(output, background_color='#284050', text_color='white')
             wOut.print("\nStep " + str(stepTracker-1) +" finished\n", background_color='#284050', text_color='white')
-
-            wOut.print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------",
-                background_color='black')
-                
             perform_protocol.Update("Restart Simulation")
             stepTracker = 0
        
