@@ -19,17 +19,17 @@ layout = [
             [sg.Text('These parameters are meant for illustration and fast execution, they are not considered secure or optimal', font=('Segoe UI', 12, 'italic'))],
             [
                 sg.Frame('', [
-                    [sg.Checkbox('Let me break stuff', font=('Segoe UI', 12), key='-DISABLECHECKS-', enable_events=True)],
-                    [sg.Text('Number of players:', font=('Segoe UI', 12)), 
-                    sg.Input('3', key='-NUMPLAYERS-', font=('Segoe UI', 12), disabled=True)],
-                    [sg.Text('Player input size', font=('Segoe UI', 12)), 
-                    sg.Input('20', key='-INPUTSIZE-', font=('Segoe UI', 12), disabled=True)],
-                    [sg.Text('Weight of chosen 1s', font=('Segoe UI', 12)), 
-                    sg.Input('0.27', key='-A-', font=('Segoe UI', 12), disabled=True)],
-                    [sg.Text('Cut-and-Choose Prob', font=('Segoe UI', 12)), 
-                    sg.Input('0.3', key='-C-', font=('Segoe UI', 12), disabled=True)],
-                    [sg.Text('Number of max ones', font=('Segoe UI', 12)), 
-                    sg.Input('80', key='-NMAXONES-', font=('Segoe UI', 12), disabled=True)],
+                    [sg.Checkbox('Let me break stuff', font=('Segoe UI', 11), key='-DISABLECHECKS-', enable_events=True)],
+                    [sg.Text('Number of players:', font=('Segoe UI', 11)), 
+                    sg.Input('3', key='-NUMPLAYERS-', font=('Segoe UI', 11), disabled=True)],
+                    [sg.Text('Player input size', font=('Segoe UI', 11)), 
+                    sg.Input('20', key='-INPUTSIZE-', font=('Segoe UI', 11), disabled=True)],
+                    [sg.Text('Weight of chosen 1s', font=('Segoe UI', 11)), 
+                    sg.Input('0.27', key='-A-', font=('Segoe UI', 11), disabled=True)],
+                    [sg.Text('Cut-and-Choose Prob', font=('Segoe UI', 11)), 
+                    sg.Input('0.3', key='-C-', font=('Segoe UI', 11), disabled=True)],
+                    [sg.Text('Number of max ones', font=('Segoe UI', 11)), 
+                    sg.Input('80', key='-NMAXONES-', font=('Segoe UI', 11), disabled=True)],
                 ]),
             ],
             [ 
@@ -57,11 +57,11 @@ layout = [
                         'gammaStar = Verifies the correct relationship between p, k, Not'],
                         size=(85,8), font=('Consolas', 10))
             ],
-            [sg.Multiline(key='-OUTPUT-', size=(300, 30), font=('Consolas', 10), autoscroll=True, text_color='white')],
+            [sg.Multiline(key='-OUTPUT-', size=(250, 30), font=('Consolas', 10), autoscroll=True, text_color='white')],
             [sg.Button('Reset', font=('Segoe UI', 12)), perform_protocol, sg.Button('Exit', font=('Segoe UI', 12))],
          ]
 
-window = sg.Window('Private Set Intersection', layout, default_element_size=(50,1))
+window = sg.Window('Private Set Intersection', layout, default_element_size=(50,1), location=(0,0), resizable=True)
 
 while True:
     # Read the event that happened and the values dictionary
@@ -203,7 +203,7 @@ while True:
 
             wOut.print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------",
                 background_color='black')
-                
+
             perform_protocol.Update("Restart Simulation")
             stepTracker = 0
        
